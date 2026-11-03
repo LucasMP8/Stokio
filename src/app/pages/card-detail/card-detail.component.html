@@ -1,0 +1,33 @@
+<section class="detail">
+  <button type="button" class="back" (click)="goBack()">&larr; Voltar para Manage Inventory</button>
+
+  <article class="detail-card" *ngIf="card; else notFound">
+    <div class="detail-side">{{ card.cardName }}</div>
+
+    <dl class="detail-body">
+      <div>
+        <dt>ID</dt>
+        <dd>#{{ card.id }}</dd>
+      </div>
+      <div>
+        <dt>Nome do card</dt>
+        <dd>{{ card.cardName }}</dd>
+      </div>
+      <div>
+        <dt>Nome</dt>
+        <dd>{{ card.name }}</dd>
+      </div>
+      <div>
+        <dt>Descrição</dt>
+        <dd class="description">{{ card.description }}</dd>
+      </div>
+    </dl>
+  </article>
+
+  <ng-template #notFound>
+    <div class="placeholder-box">
+      <p>Card não encontrado.</p>
+      <button type="button" class="btn btn-primary" (click)="goBack()">Ver todos os cards</button>
+    </div>
+  </ng-template>
+</section>

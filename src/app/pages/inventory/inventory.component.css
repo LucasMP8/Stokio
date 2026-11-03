@@ -1,0 +1,215 @@
+.inventory-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.inventory-header h1 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: #2b303b;
+}
+
+.search-info {
+  margin: 0 0 12px 18px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+/* Lista de cards */
+.card-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  max-width: 644px;
+}
+
+.card {
+  display: flex;
+  min-height: 102px;
+  border: 1px solid #eceef1;
+  background: #fff;
+  cursor: pointer;
+  transition: box-shadow 0.15s, border-color 0.15s;
+}
+
+.card:hover,
+.card:focus-visible {
+  border-color: #dfe2e6;
+  box-shadow: 0 2px 10px rgba(17, 24, 39, 0.06);
+  outline: none;
+}
+
+.card-side {
+  flex: 0 0 194px;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: #f0f1f3;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: #2b303b;
+}
+
+.card-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 10px 12px 14px;
+}
+
+.card-name {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #2b303b;
+}
+
+.card-description {
+  margin: 0;
+  font-size: 11px;
+  line-height: 2.05;
+  color: #8a909b;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.card-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.card-actions .btn {
+  min-width: 60px;
+  font-size: 11px;
+  padding: 8px 14px;
+}
+
+.card-id {
+  font-size: 10px;
+  color: #b0b5be;
+}
+
+.empty {
+  margin-left: 18px;
+  max-width: 644px;
+  padding: 40px 16px;
+  border: 1px dashed #d6d9de;
+  text-align: center;
+  color: #6b7280;
+}
+
+.empty p {
+  margin: 0 0 14px;
+}
+
+/* Modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(17, 24, 39, 0.35);
+}
+
+.modal {
+  width: 100%;
+  max-width: 440px;
+  padding: 22px;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 12px 40px rgba(17, 24, 39, 0.18);
+}
+
+.modal-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.modal-id {
+  font-size: 12px;
+  color: #9aa0aa;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #4b5160;
+}
+
+.field input,
+.field textarea {
+  padding: 9px 10px;
+  border: 1px solid #e1e4e8;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #1f2430;
+  outline: none;
+  resize: vertical;
+}
+
+.field input:focus,
+.field textarea:focus {
+  border-color: #9aa0aa;
+}
+
+.field .ng-invalid.ng-touched {
+  border-color: #d14343;
+}
+
+.error {
+  font-weight: 400;
+  color: #d14343;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+@media (max-width: 600px) {
+  .card-list,
+  .search-info,
+  .empty {
+    padding-left: 0;
+    margin-left: 0;
+  }
+
+  .card {
+    flex-direction: column;
+  }
+
+  .card-side {
+    flex: none;
+    padding: 14px;
+  }
+}

@@ -1,0 +1,95 @@
+:root {
+  --bg: #ffffff;
+  --text: #1f2430;
+  --text-muted: #6b7280;
+  --border: #eceef1;
+  --card-side: #f0f1f3;
+  --primary: #000000;
+  --primary-text: #ffffff;
+  --radius: 4px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Botões reutilizáveis */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: var(--radius);
+  padding: 9px 14px;
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-text);
+  border: 1px solid var(--primary);
+}
+
+.btn-primary:hover {
+  opacity: 0.85;
+}
+
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-outline {
+  background: #fff;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-outline:hover {
+  border-color: #c9cdd3;
+  background: #fafafa;
+}
+
+/* Páginas ainda não implementadas */
+.page-title {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0 0 24px;
+}
+
+.placeholder-box {
+  border: 1px dashed #d6d9de;
+  border-radius: 6px;
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.placeholder-box p {
+  margin: 0 0 16px;
+}

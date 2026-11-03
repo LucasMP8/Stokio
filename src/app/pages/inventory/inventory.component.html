@@ -1,0 +1,108 @@
+<section class="inventory">
+  <div class="inventory-header">
+    <h1>Manage Inventory</h1>
+    <button type="button" class="btn btn-primary" (click)="openCreate()">Add Product</button>
+  </div>
+
+  <p class="search-info" *ngIf="searchTerm">
+    {{ cards.length }} resultado(s) para "<strong>{{ searchTerm }}</strong>"
+  </p>
+
+  <ul class="card-list" *ngIf="cards.length > 0; else emptyState">
+    <li
+      *ngFor="let card of cards; trackBy: trackById"
+      class="card"
+      tabindex="0"
+      (click)="viewDetails(card)"
+      (keydown.enter)="viewDetails(card)"
+    >
+      <div class="card-side">
+        <span>{{ card.cardName }}</span>
+      </div>
+
+      <div class="card-body">
+        <div class="card-info">
+          <h2 class="card-name">{{ card.name }}</h2>
+          <p class="card-description">{{ card.description }}</p>
+        </div>
+
+        <div class="card-actions">
+          <button type="button" class="btn btn-outline" (click)="openEdit(card, $event)">Edit</button>
+          <span class="card-id">ID #{{ card.id }}</span>
+        </div>
+      </div>
+    </li>
+  </ul>
+
+  <ng-template #emptyState>
+    <div class="empty">
+      <p *ngIf="searchTerm; else noCards">Nenhum card encontrado para "{{ searchTerm }}".</p>
+      <ng-template #noCards>
+        <p>Nenhum card cadastrado ainda.</p>
+        <button type="button" class="btn btn-primary" (click)="openCreate()">Add Product</button>
+      </ng-template>
+    </div>
+  </ng-template>
+</section>
+
+<!-- Modal de criação / edição -->
+<div class="modal-backdrop" *ngIf="isFormOpen" (click)="closeForm()">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" (click)="$event.stopPropagation()">
+    <header class="modal-header">
+      <h2 id="modal-title">{{ editingId === null ? 'Novo card' : 'Editar card' }}</h2>
+      <span class="modal-id">ID #{{ editingId ?? nextIdPreview }}</span>
+    </header>
+
+    <form #cardForm="ngForm" (ngSubmit)="save(cardForm)" novalidate>
+      <label class="field">
+        <span>Nome do card</span>
+        <input
+          name="cardName"
+          type="text"
+          placeholder="Ex.: Singanallur Branch"
+          required
+          maxlength="40"
+          [(ngModel)]="form.cardName"
+          #cardName="ngModel"
+          autofocus
+        />
+        <small class="error" *ngIf="cardName.invalid && cardName.touched">Informe o nome do card.</small>
+      </label>
+
+      <label class="field">
+        <span>Nome</span>
+        <input
+          name="name"
+          type="text"
+          placeholder="Ex.: Lisy Store"
+          required
+          maxlength="60"
+          [(ngModel)]="form.name"
+          #name="ngModel"
+        />
+        <small class="error" *ngIf="name.invalid && name.touched">Informe o nome.</small>
+      </label>
+
+      <label class="field">
+        <span>Descrição</span>
+        <textarea
+          name="description"
+          rows="4"
+          placeholder="Endereço, cidade, telefone..."
+          required
+          maxlength="300"
+          [(ngModel)]="form.description"
+          #description="ngModel"
+        ></textarea>
+        <small class="error" *ngIf="description.invalid && description.touched">Informe a descrição.</small>
+      </label>
+
+      <footer class="modal-footer">
+        <button type="button" class="btn btn-outline" (click)="closeForm()">Cancelar</button>
+        <button type="submit" class="btn btn-primary">
+          {{ editingId === null ? 'Criar card' : 'Salvar alterações' }}
+        </button>
+      </footer>
+    </form>
+  </div>
+</div>

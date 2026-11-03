@@ -35,6 +35,57 @@ O Stokio encontra-se em fase de estruturação e planejamento técnico. As funci
 O Stokio tem como propósito oferecer uma solução organizada, confiável e evolutiva para o gerenciamento de estoque, contribuindo para a padronização dos processos operacionais e para a melhoria do controle de inventário.
 A utilização de Java e Angular estabelece uma base tecnológica adequada para a construção de uma aplicação web modular, com responsabilidades bem definidas e potencial de expansão.
 
+# 6. Frontend — Etapa 1: Manage Inventory
+
+Funcionalidades implementadas:
+- Layout com menu lateral de navegação (`routerLink`), barra superior com pesquisa e lista de cards.
+- Criação de cards (**Add Product**) com nome do card, nome, descrição e ID gerado automaticamente.
+- Edição dos cards (**Edit**).
+- Pesquisa entre os cards pelo campo da barra superior (ID, nome do card, nome ou descrição).
+- Página de detalhes do card (`/inventory/:id`).
+- Dados simulados com mock objects (`src/app/mocks/mock-cards.ts`), sem API nem banco de dados.
+
+## Como executar
+
+Pré-requisito: Node.js 18.13 ou superior.
+
+```bash
+npm install
+npm start
+```
+
+Acesse `http://localhost:4200/`.
+
+## Rotas
+
+| Rota             | Página                  |
+| ---------------- | ----------------------- |
+| `/inventory`     | Manage Inventory (Home) |
+| `/inventory/:id` | Detalhes do card        |
+| `/dashboard`     | Dashboard               |
+| `/reports`       | Reports                 |
+| `/orders`        | Orders                  |
+| `/manage-store`  | Manage Store            |
+| `/settings`      | Settings                |
+
+## Estrutura
+
+```
+src/app/
+├── app-routing.module.ts      # rotas da aplicação
+├── app.module.ts
+├── components/
+│   ├── sidebar/               # menu de navegação lateral
+│   └── topbar/                # barra superior com pesquisa
+├── models/store-card.model.ts # interface do card
+├── mocks/mock-cards.ts        # lista estática (mock)
+├── services/card.service.ts   # listagem, criação, edição e pesquisa
+└── pages/
+    ├── inventory/             # Home: lista + formulário de criar/editar
+    ├── card-detail/           # exibição das informações de um card
+    └── dashboard, reports, orders, manage-store, settings
+```
+
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Stokio
 Gestão eficiente. Controle inteligente.

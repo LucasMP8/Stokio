@@ -1,0 +1,36 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.layout-sidebar {
+  flex: 0 0 200px;
+}
+
+.layout-main {
+  flex: 1;
+  min-width: 0;
+  padding: 0 36px 48px 6px;
+}
+
+.layout-content {
+  padding-top: 80px;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .layout-sidebar {
+    flex: none;
+  }
+
+  .layout-main {
+    padding: 0 16px 32px;
+  }
+
+  .layout-content {
+    padding-top: 32px;
+  }
+}
