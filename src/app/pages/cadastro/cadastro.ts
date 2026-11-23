@@ -21,11 +21,32 @@ export class Cadastro {
     private router: Router,
   ) {}
 
+  validarNome(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const valorSemNumeros = input.value.replace(/\d/g, '');
+    input.value = valorSemNumeros;
+    this.nome = valorSemNumeros;
+  }
+
   cadastrar(): void {
     this.msgErro = '';
 
-    if (!this.nome.trim() || !this.email.trim() || !this.senha.trim()) {
+    const nomeLimpo = this.nome.trim();
+    const emailLimpo = this.email.trim();
+
+    if (!nomeLimpo || !emailLimpo || !this.senha.trim()) {
       this.msgErro = 'Preencha todos os campos obrigatórios';
+      return;
+    }
+
+    if (/\d/.test(nomeLimpo)) {
+      this.msgErro = 'O nome não pode conter números';
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailLimpo)) {
+      this.msgErro = 'Insira um email válido';
       return;
     }
 
@@ -36,8 +57,8 @@ export class Cadastro {
 
     const novoUsuario: Usuario = {
       id: 0,
-      nome: this.nome,
-      email: this.email,
+      nome: nomeLimpo,
+      email: emailLimpo,
       senha: this.senha,
       perfil: 'user',
     };
