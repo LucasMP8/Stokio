@@ -3,27 +3,25 @@
     <h1>Criar Conta</h1>
     <p class="subtitulo">Preencha seus dados para começar</p>
 
-    <form>
+    <form (ngSubmit)="cadastrar()">
       <div class="cadastro">
         <label for="nome">Nome</label>
-        <input id="nome" type="text" placeholder="Nome Completo" />
+        <input id="nome" name="nome" type="text" [(ngModel)]="nome" placeholder="Nome Completo" />
       </div>
 
       <div class="cadastro">
         <label for="email">Email</label>
-        <input id="email" type="email" placeholder="email" />
+        <input id="email" name="email" type="email" [(ngModel)]="email" placeholder="email" />
       </div>
 
       <div class="cadastro">
         <label for="senha">Senha</label>
-        <input id="senha" type="password" placeholder="Senha" />
+        <input id="senha" name="senha" type="password" [(ngModel)]="senha" placeholder="Senha" />
       </div>
 
       <button type="submit" class="btn-primario">Salvar</button>
     </form>
 
-    <p class="rodape">
-      Já possui registro? <a href="#">Entrar</a>
-    </p>
+    <p class="rodape">Já possui registro? <a href="#">Entrar</a></p>
   </div>
 </div>
