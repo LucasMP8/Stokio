@@ -36,6 +36,6 @@ export class Login {
       return;
     }
 
-    this.router.navigate(['/inventory']);
+    this.router.navigate(['/dashboard']);
   }
 }

@@ -15,13 +15,14 @@ export class Cadastro {
   senha: string = '';
 
   msgErro: string = '';
-  msgSucesso: string = '';
 
-  constructor(private usuarioService: UsuarioService, private router: Router) {}
+  constructor(
+    private usuarioService: UsuarioService,
+    private router: Router,
+  ) {}
 
   cadastrar(): void {
     this.msgErro = '';
-    this.msgSucesso = '';
 
     if (!this.nome.trim() || !this.email.trim() || !this.senha.trim()) {
       this.msgErro = 'Preencha todos os campos obrigatórios';
@@ -32,6 +33,7 @@ export class Cadastro {
       this.msgErro = 'Insira uma senha de pelo menos seis caracteres';
       return;
     }
+
     const novoUsuario: Usuario = {
       id: 0,
       nome: this.nome,
@@ -41,7 +43,6 @@ export class Cadastro {
     };
 
     this.usuarioService.cadastrar(novoUsuario);
-    this.router.navigate(['/inventory'])
-    console.log('Usuários cadastrados:', this.usuarioService.listar());
+    this.router.navigate(['/dashboard']);
   }
 }
