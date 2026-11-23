@@ -1,58 +1,108 @@
+.container,
+.container * {
+  box-sizing: border-box;
+}
+
 .container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #ffffff;
+  font-family: inherit;
+}
+
+.lado-logo {
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background-color: #f4f6f8;
-  font-family: Arial, sans-serif;
+  padding: 40px;
+  border-right: 1px solid #f0f0f0;
 }
 
-.card {
-  background-color: #ffffff;
-  padding: 32px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+.logo-img {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  object-fit: contain;
+}
+
+.lado-form {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.form-wrapper {
   width: 100%;
   max-width: 380px;
 }
 
-h1 {
-  margin: 0 0 24px 0;
-  font-size: 30px;
-  color: #000000;
+.form-header {
+  margin-bottom: 28px;
 }
 
-.login {
+h1 {
+  margin: 0 0 6px 0;
+  font-size: 30px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.subtitulo {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.campo {
   display: flex;
   flex-direction: column;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
-.login label {
-  font-size: 15px;
-  font-weight: bold;
+.campo label {
+  font-size: 14px;
+  font-weight: 600;
   margin-bottom: 8px;
   color: #222428;
 }
 
-.login input {
-  padding: 10px 12px;
+.campo input {
+  padding: 12px 14px;
   border: 1px solid #d1d5db;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 14px;
+  color: #111827;
+  transition: border-color 0.2s ease;
+}
+
+.campo input:focus {
+  outline: none;
+  border-color: #000000;
+}
+
+.msg-erro {
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 14px 0;
 }
 
 .btn-primario {
   width: 100%;
-  padding: 12px;
+  padding: 13px;
   background-color: #000000;
   color: #ffffff;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 15px;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
-  margin-top: 8px;
+  margin-top: 6px;
+  transition: background-color 0.2s ease;
 }
 
 .btn-primario:hover {
@@ -61,7 +111,7 @@ h1 {
 
 .rodape {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 24px;
   font-size: 14px;
   color: #6b7280;
 }
@@ -69,18 +119,31 @@ h1 {
 .rodape a {
   color: #000000;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 600;
 }
 
-.dica {
-  font-size: 12px;
-  color: #6b7280;
-  margin-top: 6px;
+.rodape a:hover {
+  text-decoration: underline;
 }
 
-.msg-erro {
-  color: #dc2626;
-  font-size: 13px;
-  font-weight: bold;
-  margin: 0 0 12px 0;
+/* Ajuste para telas pequenas */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .lado-logo {
+    flex: none;
+    padding: 32px 24px 20px;
+    border-right: none;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .logo-img {
+    max-width: 180px;
+  }
+
+  .lado-form {
+    padding: 32px 24px;
+  }
 }

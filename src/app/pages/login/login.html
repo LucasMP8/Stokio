@@ -1,37 +1,46 @@
 <div class="container">
-  <div class="card">
-    <h1>Bem vindo</h1>
+  <section class="lado-logo">
+    <img src="/images/stokio-logo.png" alt="Logo Stokio" class="logo-img" />
+  </section>
 
-    <form (ngSubmit)="entrar()">
-      <div class="login">
-        <label for="email">Email</label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          [(ngModel)]="email"
-          placeholder="email"
-        />
-      </div>
+  <section class="lado-form">
+    <div class="form-wrapper">
+      <header class="form-header">
+        <h1>Bem-vindo</h1>
+        <p class="subtitulo">Faça login para acessar sua conta</p>
+      </header>
 
-      <div class="login">
-        <label for="senha">Senha</label>
-        <input
-          id="senha"
-          name="senha"
-          type="password"
-          [(ngModel)]="senha"
-          placeholder="senha"
-        />
-      </div>
+      <form (ngSubmit)="entrar()">
+        <div class="campo">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            [(ngModel)]="email"
+            placeholder="email"
+          />
+        </div>
 
-      @if (msgErro) {
-        <p class="msg-erro">{{ msgErro }}</p>
-      }
+        <div class="campo">
+          <label for="senha">Senha</label>
+          <input
+            id="senha"
+            name="senha"
+            type="password"
+            [(ngModel)]="senha"
+            placeholder="senha"
+          />
+        </div>
 
-      <button type="submit" class="btn-primario">Entrar</button>
-    </form>
+        @if (msgErro) {
+          <p class="msg-erro">{{ msgErro }}</p>
+        }
 
-    <p class="rodape">Não possui registro? <a routerLink="/cadastro">Cadastrar</a></p>
-  </div>
+        <button type="submit" class="btn-primario">Entrar</button>
+      </form>
+
+      <p class="rodape">Não possui registro? <a routerLink="/cadastro">Cadastrar</a></p>
+    </div>
+  </section>
 </div>
