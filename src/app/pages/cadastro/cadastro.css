@@ -1,0 +1,81 @@
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f4f6f8;
+  font-family: Arial, sans-serif;
+}
+
+
+.card {
+  background-color: #ffffff;
+  padding: 32px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 380px;
+}
+
+h1 {
+  margin: 0 0 8px 0;
+  font-size: 30px;
+  color: #1f2937;
+}
+
+.subtitulo {
+  margin: 0 0 24px 0;
+  font-size: 15px;
+  color: #6b7280;
+}
+
+.cadastro {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.cadastro label {
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #222428;
+}
+
+.cadastro input {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.btn-primario {
+  width: 100%;
+  padding: 12px;
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.btn-primario:hover {
+  background-color: #222428;
+}
+
+.rodape {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.rodape a {
+  color: #000000;
+  text-decoration: none;
+  font-weight: bold;
+}
