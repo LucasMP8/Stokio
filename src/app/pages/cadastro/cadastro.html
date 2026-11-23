@@ -17,8 +17,11 @@
       <div class="cadastro">
         <label for="senha">Senha</label>
         <input id="senha" name="senha" type="password" [(ngModel)]="senha" placeholder="Senha" />
+        <small class="dica">Deve ter no mínimo 6 caracteres</small>
       </div>
-
+      @if (msgErro) {
+        <p class="msg-erro">{{ msgErro }}</p>
+      }
       <button type="submit" class="btn-primario">Salvar</button>
     </form>
 
