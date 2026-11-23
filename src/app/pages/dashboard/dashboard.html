@@ -1,6 +1,113 @@
-<h1 class="page-title">Dashboard</h1>
+<div class="dashboard-page">
+  <header class="page-header">
+    <h1>Dashboard</h1>
+    <button type="button" class="btn-dark" (click)="goToInventory()">Gerenciar estoques</button>
+  </header>
 
-<div class="placeholder-box">
-  <p>Esta página será implementada nas próximas etapas.</p>
-  <button type="button" class="btn btn-primary" (click)="goToInventory()">Ir para Gerenciar inventário</button>
+  <div class="dashboard-grid">
+    <section class="card">
+      <h2>Resumo Financeiro</h2>
+      <div class="metrics-grid cols-4">
+        <div class="metric-item">
+          <span class="metric-value">R$ </span>
+          <span class="metric-label">Custo em Estoque</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-value">R$ </span>
+          <span class="metric-label">Potencial de Venda</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-value destaque-positivo">R$ </span>
+          <span class="metric-label">Lucro Estimado</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-value">6,7%</span>
+          <span class="metric-label">Margem Média</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Resumo de Produtos</h2>
+      <div class="metrics-grid cols-2">
+        <div class="metric-item">
+          <span class="metric-value"> </span>
+          <span class="metric-label">Em alerta</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-value"> </span>
+          <span class="metric-label">Inativos</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Movimentações Recentes</h2>
+      <div class="metrics-grid cols-4">
+        <div class="metric-item">
+          <span class="metric-value">0</span>
+          <span class="metric-label">Entradas</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-value">0</span>
+          <span class="metric-label">Saídas</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-value">0</span>
+          <span class="metric-label">Devoluções</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-value">0</span>
+          <span class="metric-label">Perdas / Uso Interno</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Situação dos Produtos</h2>
+      <div class="metrics-grid cols-2">
+        <div class="metric-item">
+          <span class="metric-value">3</span>
+          <span class="metric-label">Estoques Ativos</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-value">5</span>
+          <span class="metric-label">Categorias</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-header">
+        <h2>Entradas x Saídas</h2>
+        <span class="badge-period">Últimos 6 meses</span>
+      </div>
+      <div class="chart-placeholder">Em breve</div>
+    </section>
+
+    <section class="card">
+      <div class="card-header">
+        <h2>Alerta de Reposição</h2>
+        <a class="link-action" (click)="goToInventory()">Ver estoques</a>
+      </div>
+
+      <div class="stock-list">
+        <div class="stock-item">
+          <div class="stock-info">
+            <strong>Teclado Mecânico </strong>
+            <span>Restam:  un • Mínimo:  un</span>
+          </div>
+          <span class="badge-low">Critíco</span>
+        </div>
+
+        <div class="stock-item">
+          <div class="stock-info">
+            <strong>Cabo HDMI </strong>
+            <span>Restam:  un • Mínimo:  un</span>
+          </div>
+          <span class="badge-low">Baixo</span>
+        </div>
+      </div>
+    </section>
+  </div>
 </div>
