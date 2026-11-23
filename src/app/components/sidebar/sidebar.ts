@@ -32,7 +32,6 @@ export class Sidebar {
   }
 
   logout(): void {
-    // Ainda não há autenticação: apenas retorna para a página inicial.
-    this.router.navigate(['/inventory']);
+    this.router.navigate(['/login']);
   }
 }

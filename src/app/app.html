@@ -1,15 +1,19 @@
-<div class="layout">
-  <app-sidebar class="layout-sidebar" />
+@if (exibirLayout) {
+  <div class="layout">
+    <app-sidebar class="layout-sidebar" />
 
-  <div class="layout-main">
-    <app-topbar />
+    <div class="layout-main">
+      <app-topbar />
 
-    <main class="layout-content">
-      <router-outlet />
-    </main>
+      <main class="layout-content">
+        <router-outlet />
+      </main>
 
-    <footer class="footer">
-      Feito por Lucas Alves, Lucas Marques - Projeto acadêmico - &#64;Fumec
-    </footer>
+      <footer class="footer">
+        Feito por Lucas Alves, Lucas Marques - Projeto acadêmico - &#64;Fumec
+      </footer>
+    </div>
   </div>
-</div>
+} @else {
+  <router-outlet />
+}
