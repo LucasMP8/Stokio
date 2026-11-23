@@ -35,57 +35,55 @@ O Stokio encontra-se em fase de estruturação e planejamento técnico. As funci
 O Stokio tem como propósito oferecer uma solução organizada, confiável e evolutiva para o gerenciamento de estoque, contribuindo para a padronização dos processos operacionais e para a melhoria do controle de inventário.
 A utilização de Java e Angular estabelece uma base tecnológica adequada para a construção de uma aplicação web modular, com responsabilidades bem definidas e potencial de expansão.
 
-# 6. Frontend — Etapa 1: Gerenciar inventário
+# 6. Frontend — Etapa 1: Manage Inventory
 
 Funcionalidades implementadas:
-- Layout com menu lateral de navegação (`routerLink`), barra superior com pesquisa e lista de estoques em cards.
-- Cadastro de estoques (**Add Estoque**) com nome, endereço, cidade, telefone e ID gerado automaticamente. O nome aparece no quadrado à esquerda e no corpo do card.
-- Edição dos estoques (**Edit**).
-- Pesquisa entre os estoques pelo campo da barra superior (ID, nome, endereço, cidade ou telefone).
-- Clique no quadrado com o nome do estoque leva à página Produtos.
-- Página de detalhes do estoque (`/inventory/:id`).
-- Rodapé com os autores do projeto.
-- Dados simulados com mock objects (`src/app/mocks/mock-estoques.ts`, com os estoques de `db.json`), sem API nem banco de dados.
+- Layout com menu lateral de navegação (`routerLink`), barra superior com pesquisa e lista de cards.
+- Criação de cards (**Add Product**) com nome do card, nome, descrição e ID gerado automaticamente.
+- Edição dos cards (**Edit**).
+- Pesquisa entre os cards pelo campo da barra superior (ID, nome do card, nome ou descrição).
+- Página de detalhes do card (`/inventory/:id`).
+- Dados simulados com mock objects (`src/app/mocks/mock-cards.ts`), sem API nem banco de dados.
 
 ## Como executar
 
-Projeto em **Angular 22**. Ambiente usado pelo grupo: Node.js 24.21.0 com npm 11.19.0.
+Pré-requisito: Node.js 18.13 ou superior.
 
 ```bash
-npm ci         # instala as versões exatas do package-lock.json
-npm start      # servidor de desenvolvimento em http://localhost:4200/
-npm test       # testes unitários (Vitest)
-npm run build  # build de produção em dist/stokio
+npm install
+npm start
 ```
+
+Acesse `http://localhost:4200/`.
 
 ## Rotas
 
 | Rota             | Página                  |
 | ---------------- | ----------------------- |
+| `/inventory`     | Manage Inventory (Home) |
+| `/inventory/:id` | Detalhes do card        |
 | `/dashboard`     | Dashboard               |
-| `/produtos`      | Produtos                |
-| `/inventory`     | Gerenciar inventário (Home) |
-| `/inventory/:id` | Detalhes do estoque     |
-| `/registro-movimento` | Registro de movimento |
+| `/reports`       | Reports                 |
+| `/orders`        | Orders                  |
+| `/manage-store`  | Manage Store            |
 | `/settings`      | Settings                |
 
 ## Estrutura
 
 ```
 src/app/
-├── app-routing-module.ts      # rotas da aplicação (AppRoutingModule)
-├── app-module.ts              # módulo principal (AppModule)
-├── app.routes.server.ts       # modo de renderização de cada rota no servidor
+├── app-routing.module.ts      # rotas da aplicação
+├── app.module.ts
 ├── components/
 │   ├── sidebar/               # menu de navegação lateral
 │   └── topbar/                # barra superior com pesquisa
-├── models/                    # interfaces Estoque, Usuario e Produto
-├── mocks/mock-estoques.ts     # lista estática (mock) de estoques
-├── services/estoque.service.ts # listagem, criação, edição e pesquisa
+├── models/store-card.model.ts # interface do card
+├── mocks/mock-cards.ts        # lista estática (mock)
+├── services/card.service.ts   # listagem, criação, edição e pesquisa
 └── pages/
     ├── inventory/             # Home: lista + formulário de criar/editar
-    ├── card-detail/           # exibição das informações de um estoque
-    └── dashboard, produtos, registro-movimento, settings
+    ├── card-detail/           # exibição das informações de um card
+    └── dashboard, reports, orders, manage-store, settings
 ```
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
