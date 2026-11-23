@@ -9,6 +9,7 @@ import { Sidebar } from './components/sidebar/sidebar';
 import { Topbar } from './components/topbar/topbar';
 
 import { Inventory } from './pages/inventory/inventory';
+import { CardDetail } from './pages/card-detail/card-detail';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { Produtos } from './pages/produtos/produtos';
 import { RegistroMovimento } from './pages/registro-movimento/registro-movimento';
@@ -20,6 +21,7 @@ import { Settings } from './pages/settings/settings';
     Sidebar,
     Topbar,
     Inventory,
+    CardDetail,
     Dashboard,
     Produtos,
     RegistroMovimento,

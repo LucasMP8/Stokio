@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { Inventory } from './pages/inventory/inventory';
+import { CardDetail } from './pages/card-detail/card-detail';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { Produtos } from './pages/produtos/produtos';
 import { RegistroMovimento } from './pages/registro-movimento/registro-movimento';
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: 'dashboard', component: Dashboard, title: 'Dashboard | Stokio' },
   { path: 'produtos', component: Produtos, title: 'Produtos | Stokio' },
   { path: 'inventory', component: Inventory, title: 'Gerenciar inventário | Stokio' },
+  { path: 'inventory/:id', component: CardDetail, title: 'Detalhes do estoque | Stokio' },
   {
     path: 'registro-movimento',
     component: RegistroMovimento,
