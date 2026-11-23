@@ -1,1 +1,15 @@
-<router-outlet></router-outlet>
+<div class="layout">
+  <app-sidebar class="layout-sidebar" />
+
+  <div class="layout-main">
+    <app-topbar />
+
+    <main class="layout-content">
+      <router-outlet />
+    </main>
+
+    <footer class="footer">
+      Feito por Lucas Alves, Lucas Marques - Projeto acadêmico - &#64;Fumec
+    </footer>
+  </div>
+</div>
