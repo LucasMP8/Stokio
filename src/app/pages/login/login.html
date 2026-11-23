@@ -1,18 +1,33 @@
 <div class="container">
   <div class="card">
     <h1>Bem vindo</h1>
-    <p class="subtitulo">Insira seu login</p>
 
-    <form>
+    <form (ngSubmit)="entrar()">
       <div class="login">
         <label for="email">Email</label>
-        <input id="email" name="email" type="email" placeholder="email" />
+        <input
+          id="email"
+          name="email"
+          type="email"
+          [(ngModel)]="email"
+          placeholder="email"
+        />
       </div>
 
       <div class="login">
         <label for="senha">Senha</label>
-        <input id="senha" name="senha" type="password" placeholder="senha" />
+        <input
+          id="senha"
+          name="senha"
+          type="password"
+          [(ngModel)]="senha"
+          placeholder="senha"
+        />
       </div>
+
+      @if (msgErro) {
+        <p class="msg-erro">{{ msgErro }}</p>
+      }
 
       <button type="submit" class="btn-primario">Entrar</button>
     </form>

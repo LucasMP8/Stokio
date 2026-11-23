@@ -29,4 +29,10 @@ cadastrar(novoUsuario: Usuario): void{
     this.usuarios.push(novoUsuario)
 }
 
+autenticar(email: string, senha: string): Usuario | undefined{
+  return this.usuarios.find(
+    (usuarios) => usuarios.email === email && usuarios.senha === senha
+  );
+} 
+
 }

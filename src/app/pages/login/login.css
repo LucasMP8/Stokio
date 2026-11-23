@@ -17,15 +17,9 @@
 }
 
 h1 {
-  margin: 0 0 8px 0;
+  margin: 0 0 24px 0;
   font-size: 30px;
   color: #000000;
-}
-
-.subtitulo {
-  margin: 0 0 24px 0;
-  font-size: 15px;
-  color: #6b7280;
 }
 
 .login {
