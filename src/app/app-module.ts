@@ -8,13 +8,23 @@ import { App } from './app';
 import { Sidebar } from './components/sidebar/sidebar';
 import { Topbar } from './components/topbar/topbar';
 
+import { Inventory } from './pages/inventory/inventory';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { Produtos } from './pages/produtos/produtos';
 import { RegistroMovimento } from './pages/registro-movimento/registro-movimento';
 import { Settings } from './pages/settings/settings';
 
 @NgModule({
-  declarations: [App, Sidebar, Topbar, Dashboard, Produtos, RegistroMovimento, Settings],
+  declarations: [
+    App,
+    Sidebar,
+    Topbar,
+    Inventory,
+    Dashboard,
+    Produtos,
+    RegistroMovimento,
+    Settings,
+  ],
   imports: [BrowserModule, FormsModule, AppRoutingModule],
   providers: [provideBrowserGlobalErrorListeners(), provideClientHydration()],
   bootstrap: [App],
