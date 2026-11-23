@@ -162,13 +162,28 @@
   color: #6b7280;
 }
 
-.badge-low {
+.badge-critico {
   background-color: #fee2e2;
   color: #dc2626;
   font-size: 12px;
   font-weight: 600;
   padding: 4px 10px;
   border-radius: 12px;
+}
+
+.badge-low {
+  background-color: #fef3c7;
+  color: #b45309;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.empty-msg {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
 }
 
 @media (max-width: 1024px) {

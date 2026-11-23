@@ -9,19 +9,19 @@
       <h2>Resumo Financeiro</h2>
       <div class="metrics-grid cols-4">
         <div class="metric-item">
-          <span class="metric-value">R$ </span>
+          <span class="metric-value">{{ formatarMoeda(custoEmEstoque) }}</span>
           <span class="metric-label">Custo em Estoque</span>
         </div>
         <div class="metric-item">
-          <span class="metric-value">R$ </span>
+          <span class="metric-value">{{ formatarMoeda(potencialDeVenda) }}</span>
           <span class="metric-label">Potencial de Venda</span>
         </div>
         <div class="metric-item">
-          <span class="metric-value destaque-positivo">R$ </span>
+          <span class="metric-value destaque-positivo">{{ formatarMoeda(lucroEstimado) }}</span>
           <span class="metric-label">Lucro Estimado</span>
         </div>
         <div class="metric-item">
-          <span class="metric-value">6,7%</span>
+          <span class="metric-value">{{ formatarPercentual(margemMedia) }}</span>
           <span class="metric-label">Margem Média</span>
         </div>
       </div>
@@ -31,12 +31,12 @@
       <h2>Resumo de Produtos</h2>
       <div class="metrics-grid cols-2">
         <div class="metric-item">
-          <span class="metric-value"> </span>
-          <span class="metric-label">Em alerta</span>
+          <span class="metric-value">{{ totalEmEstoque }}</span>
+          <span class="metric-label">Total em Estoque</span>
         </div>
         <div class="metric-item">
-          <span class="metric-value"> </span>
-          <span class="metric-label">Inativos</span>
+          <span class="metric-value">{{ produtosAtivos.length }}</span>
+          <span class="metric-label">Produtos Ativos</span>
         </div>
       </div>
     </section>
@@ -45,19 +45,19 @@
       <h2>Movimentações Recentes</h2>
       <div class="metrics-grid cols-4">
         <div class="metric-item">
-          <span class="metric-value">0</span>
+          <span class="metric-value">{{ totalEntradas }}</span>
           <span class="metric-label">Entradas</span>
         </div>
         <div class="metric-item">
-          <span class="metric-value">0</span>
+          <span class="metric-value">{{ totalSaidas }}</span>
           <span class="metric-label">Saídas</span>
         </div>
         <div class="metric-item">
-          <span class="metric-value">0</span>
+          <span class="metric-value">{{ totalDevolucoes }}</span>
           <span class="metric-label">Devoluções</span>
         </div>
         <div class="metric-item">
-          <span class="metric-value">0</span>
+          <span class="metric-value">{{ totalPerdas }}</span>
           <span class="metric-label">Perdas / Uso Interno</span>
         </div>
       </div>
@@ -67,12 +67,12 @@
       <h2>Situação dos Produtos</h2>
       <div class="metrics-grid cols-2">
         <div class="metric-item">
-          <span class="metric-value">3</span>
-          <span class="metric-label">Estoques Ativos</span>
+          <span class="metric-value">{{ produtosEmAlerta.length }}</span>
+          <span class="metric-label">Em Alerta</span>
         </div>
         <div class="metric-item">
-          <span class="metric-value">5</span>
-          <span class="metric-label">Categorias</span>
+          <span class="metric-value">{{ produtosInativos.length }}</span>
+          <span class="metric-label">Inativos</span>
         </div>
       </div>
     </section>
@@ -92,21 +92,25 @@
       </div>
 
       <div class="stock-list">
-        <div class="stock-item">
-          <div class="stock-info">
-            <strong>Teclado Mecânico </strong>
-            <span>Restam:  un • Mínimo:  un</span>
-          </div>
-          <span class="badge-low">Critíco</span>
-        </div>
+        @for (produto of produtosEmAlerta; track produto.id) {
+          <div class="stock-item">
+            <div class="stock-info">
+              <strong>{{ produto.nome }}</strong>
+              <span>
+                Restam: {{ produto.quantidade }} {{ produto.unidade }} • Mínimo:
+                {{ produto.estoqueMinimo }} {{ produto.unidade }}
+              </span>
+            </div>
 
-        <div class="stock-item">
-          <div class="stock-info">
-            <strong>Cabo HDMI </strong>
-            <span>Restam:  un • Mínimo:  un</span>
+            @if (isCritico(produto)) {
+              <span class="badge-critico">Crítico</span>
+            } @else {
+              <span class="badge-low">Baixo</span>
+            }
           </div>
-          <span class="badge-low">Baixo</span>
-        </div>
+        } @empty {
+          <p class="empty-msg">Nenhum produto com estoque baixo.</p>
+        }
       </div>
     </section>
   </div>
