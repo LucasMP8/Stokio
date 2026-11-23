@@ -82,7 +82,55 @@
         <h2>Entradas x Saídas</h2>
         <span class="badge-period">Últimos 6 meses</span>
       </div>
-      <div class="chart-placeholder">Em breve</div>
+
+      <div class="chart-container">
+        <div class="chart-main">
+          <div class="y-axis">
+            @for (valor of linhasEscala; track $index) {
+              <span>{{ valor }}</span>
+            }
+          </div>
+
+          <div class="chart-area">
+            <div class="grid-lines">
+              @for (valor of linhasEscala; track $index) {
+                <div class="grid-line"></div>
+              }
+            </div>
+
+            <div class="bars-container">
+              @for (item of dadosGrafico; track item.mes) {
+                <div class="bar-group">
+                  <div class="bars-pair">
+                    <div
+                      class="bar bar-entrada"
+                      [style.height.%]="calcularAltura(item.entradas)"
+                      [title]="'Entradas em ' + item.mes + ': ' + item.entradas"
+                    ></div>
+                    <div
+                      class="bar bar-saida"
+                      [style.height.%]="calcularAltura(item.saidas)"
+                      [title]="'Saídas em ' + item.mes + ': ' + item.saidas"
+                    ></div>
+                  </div>
+                  <span class="bar-label">{{ item.mes }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-legend">
+          <div class="legend-item">
+            <span class="legend-dot dot-entrada"></span>
+            <span>Entradas</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot dot-saida"></span>
+            <span>Saídas</span>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="card">
@@ -97,8 +145,10 @@
             <div class="stock-info">
               <strong>{{ produto.nome }}</strong>
               <span>
-                Restam: {{ produto.quantidade }} {{ produto.unidade }} • Mínimo:
-                {{ produto.estoqueMinimo }} {{ produto.unidade }}
+                Restam: {{ produto.quantidade }}
+                {{ formatarUnidade(produto.quantidade, produto.unidade) }} • Mínimo:
+                {{ produto.estoqueMinimo }}
+                {{ formatarUnidade(produto.estoqueMinimo, produto.unidade) }}
               </span>
             </div>
 

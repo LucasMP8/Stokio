@@ -83,6 +83,34 @@ export class Dashboard {
   totalSaidas: number = 0;
   totalDevolucoes: number = 0;
   totalPerdas: number = 0;
+  dadosGrafico: dadoGraficoMensal[] = [
+    { mes: 'Jun', entradas: 45, saidas: 32 },
+    { mes: 'Jul', entradas: 58, saidas: 44 },
+    { mes: 'Ago', entradas: 38, saidas: 41 },
+    { mes: 'Set', entradas: 52, saidas: 35 },
+    { mes: 'Out', entradas: 48, saidas: 46 },
+    { mes: 'Nov', entradas: 55, saidas: 39 },
+  ];
+
+  get tetoGrafico(): number {
+    const valores = this.dadosGrafico.flatMap((d) => [d.entradas, d.saidas]);
+    const maior = Math.max(...valores, 0);
+
+    if (maior === 0) {
+      return 20;
+    }
+
+    return Math.ceil(maior / 20) * 20;
+  }
+
+  get linhasEscala(): number[] {
+    const teto = this.tetoGrafico;
+    return [teto, teto * 0.75, teto * 0.5, teto * 0.25, 0];
+  }
+
+  calcularAltura(valor: number): number {
+    return (valor / this.tetoGrafico) * 100;
+  }
 
   get produtosAtivos(): Produto[] {
     return this.produtos.filter((p) => p.ativo);
@@ -134,7 +162,20 @@ export class Dashboard {
     return `${valor.toFixed(1).replace('.', ',')}%`;
   }
 
+  formatarUnidade(quantidade: number, unidade: string): string {
+    const base = unidade.toLowerCase();
+    return quantidade === 1 ? base : `${base}s`;
+  }
+
   goToInventory(): void {
     this.router.navigate(['/inventory']);
   }
 }
+
+interface dadoGraficoMensal {
+  mes: string;
+  entradas: number;
+  saidas: number;
+}
+
+
