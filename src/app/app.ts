@@ -11,6 +11,7 @@ import { filter } from 'rxjs/operators';
 export class App {
   private readonly router = inject(Router);
   exibirLayout = false;
+  exibirFooter = false;
 
   constructor() {
     this.atualizarVisibilidadeLayout(this.router.url);
@@ -24,9 +25,15 @@ export class App {
 
   private atualizarVisibilidadeLayout(url: string): void {
     const rotasSemLayout = ['/login', '/cadastro'];
+    const rotasSemFooter = ['/login'];
     const rotaLimpa = url.split('?')[0].split('#')[0];
+
     this.exibirLayout = !rotasSemLayout.some(
-      (rota) => rotaLimpa === rota || rotaLimpa.startsWith(`${rota}/`)
+      (rota) => rotaLimpa === rota || rotaLimpa.startsWith(`${rota}/`),
+    );
+
+    this.exibirFooter = !rotasSemFooter.some(
+      (rota) => rotaLimpa === rota || rotaLimpa.startsWith(`${rota}/`),
     );
   }
 }

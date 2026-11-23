@@ -15,5 +15,15 @@
     </div>
   </div>
 } @else {
-  <router-outlet />
+  <div class="layout-simples">
+    <main class="layout-simples-content">
+      <router-outlet />
+    </main>
+
+    @if (exibirFooter) {
+      <footer class="footer">
+        Feito por Lucas Alves, Lucas Marques - Projeto acadêmico - &#64;Fumec
+      </footer>
+    }
+  </div>
 }
