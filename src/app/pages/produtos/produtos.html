@@ -1,6 +1,252 @@
-<h1 class="page-title">Produtos</h1>
+<div class="produtos-page">
+  <section class="card resumo">
+    <h2>Inventário geral</h2>
 
-<div class="placeholder-box">
-  <p>Esta página será implementada nas próximas etapas.</p>
-  <button type="button" class="btn btn-primary" (click)="goToInventory()">Ir para Gerenciar inventário</button>
+    <div class="resumo-grid">
+      <div class="resumo-item">
+        <h3 class="azul">Categorias</h3>
+        <div class="resumo-valores">
+          <div>
+            <strong>{{ resumo().categorias }}</strong>
+            <span>Cadastradas</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="resumo-item">
+        <h3 class="laranja">Total de produtos</h3>
+        <div class="resumo-valores">
+          <div>
+            <strong>{{ resumo().totalProdutos }}</strong>
+            <span>Cadastrados</span>
+          </div>
+          <div>
+            <strong>{{ formatarMoeda(resumo().valorVenda) }}</strong>
+            <span>Valor de venda</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="resumo-item">
+        <h3 class="roxo">Itens em estoque</h3>
+        <div class="resumo-valores">
+          <div>
+            <strong>{{ resumo().unidades }}</strong>
+            <span>Unidades</span>
+          </div>
+          <div>
+            <strong>{{ formatarMoeda(resumo().valorCusto) }}</strong>
+            <span>Valor de custo</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="resumo-item">
+        <h3 class="vermelho">Estoque baixo</h3>
+        <div class="resumo-valores">
+          <div>
+            <strong>{{ resumo().estoqueBaixo }}</strong>
+            <span>No mínimo ou abaixo</span>
+          </div>
+          <div>
+            <strong>{{ resumo().semEstoque }}</strong>
+            <span>Sem estoque</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card tabela-card">
+    <header class="tabela-header">
+      <h2>Produtos</h2>
+      <div class="tabela-acoes">
+        <button type="button" class="btn btn-primary" (click)="abrirCadastro()">Adicionar produto</button>
+        <button
+          type="button"
+          class="btn btn-outline"
+          [class.ativo]="filtrosAbertos()"
+          (click)="alternarFiltros()"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            aria-hidden="true">
+            <line x1="4" y1="7" x2="20" y2="7" />
+            <line x1="7" y1="12" x2="17" y2="12" />
+            <line x1="10" y1="17" x2="14" y2="17" />
+          </svg>
+          Filtros
+        </button>
+      </div>
+    </header>
+
+    @if (filtrosAbertos()) {
+      <div class="filtros">
+        <label>
+          <span>Situação</span>
+          <select [value]="filtroSituacao()" (change)="filtrarPorSituacao($any($event.target).value)">
+            <option value="">Todas</option>
+            @for (s of situacoes; track s.valor) {
+              <option [value]="s.valor">{{ s.rotulo }}</option>
+            }
+          </select>
+        </label>
+
+        <label>
+          <span>Estoque</span>
+          <select [value]="filtroEstoque()" (change)="filtrarPorEstoque($any($event.target).value)">
+            <option value="">Todos</option>
+            @for (e of estoques(); track e.id) {
+              <option [value]="e.id">{{ e.nome }}</option>
+            }
+          </select>
+        </label>
+
+        @if (filtroSituacao() || filtroEstoque()) {
+          <button type="button" class="limpar" (click)="limparFiltros()">Limpar filtros</button>
+        }
+      </div>
+    }
+
+    <div class="tabela-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Preço</th>
+            <th>Quantidade</th>
+            <th>Estoque</th>
+            <th>Situação</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (produto of produtosDaPagina(); track produto.id) {
+            <tr tabindex="0" (click)="abrirEdicao(produto)" (keydown.enter)="abrirEdicao(produto)">
+              <td>{{ produto.nome }}</td>
+              <td>{{ formatarMoeda(produto.precoVenda) }}</td>
+              <td>{{ formatarQuantidade(produto) }}</td>
+              <td>{{ nomeEstoque(produto.estoqueId) }}</td>
+              <td class="situacao" [ngClass]="situacao(produto)">{{ rotuloSituacao(produto) }}</td>
+            </tr>
+          } @empty {
+            <tr class="vazio">
+              <td colspan="5">Nenhum produto encontrado com esses filtros.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="paginacao">
+      <span>Página {{ pagina() }} de {{ totalPaginas() }}</span>
+      <button type="button" class="btn btn-outline" [disabled]="totalPaginas() === 1" (click)="proximaPagina()">
+        Próxima
+      </button>
+    </footer>
+  </section>
 </div>
+
+@if (modalAberto()) {
+  <div class="modal-backdrop" (click)="fecharModal()">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-modal" (click)="$event.stopPropagation()">
+      <h2 id="titulo-modal">{{ editandoId() === null ? 'Novo produto' : 'Editar produto' }}</h2>
+
+      <form [formGroup]="form" (ngSubmit)="salvar()" novalidate>
+        <div class="linha">
+          <label for="nome">Nome do produto</label>
+          <div class="campo">
+            <input id="nome" type="text" formControlName="nome" placeholder="Digite o nome do produto" />
+            @if (invalido('nome')) {
+              <small class="erro">Informe o nome do produto (até 60 caracteres).</small>
+            }
+          </div>
+        </div>
+
+        <div class="linha">
+          <label for="id">ID do produto</label>
+          <div class="campo">
+            <input id="id" type="text" [value]="editandoId() ?? nextId()" readonly />
+            <small class="dica">Gerado automaticamente.</small>
+          </div>
+        </div>
+
+        <div class="linha">
+          <span class="rotulo">Estoque</span>
+          <div class="campo">
+            <div class="opcoes-estoque" role="radiogroup" aria-label="Estoque">
+              @for (e of estoques(); track e.id) {
+                <label class="opcao">
+                  <input type="radio" formControlName="estoqueId" [value]="e.id" />
+                  {{ e.nome }}
+                </label>
+              }
+            </div>
+            @if (invalido('estoqueId')) {
+              <small class="erro">Selecione o estoque do produto.</small>
+            }
+          </div>
+        </div>
+
+        <div class="linha">
+          <label for="precoVenda">Preço</label>
+          <div class="campo">
+            <input id="precoVenda" type="number" min="0" step="0.01" formControlName="precoVenda"
+              placeholder="Digite o preço de venda" />
+            @if (invalido('precoVenda')) {
+              <small class="erro">Informe um preço maior que zero.</small>
+            }
+          </div>
+        </div>
+
+        <div class="linha">
+          <label for="quantidade">Quantidade</label>
+          <div class="campo">
+            <input id="quantidade" type="number" min="0" step="1" formControlName="quantidade"
+              placeholder="Digite a quantidade" />
+            @if (invalido('quantidade')) {
+              <small class="erro">Informe um número inteiro igual ou maior que zero.</small>
+            }
+          </div>
+        </div>
+
+        <div class="linha">
+          <label for="estoqueMinimo">Quantidade mínima</label>
+          <div class="campo">
+            <input id="estoqueMinimo" type="number" min="0" step="1" formControlName="estoqueMinimo"
+              placeholder="Digite a quantidade mínima" />
+            @if (invalido('estoqueMinimo')) {
+              <small class="erro">Informe um número inteiro igual ou maior que zero.</small>
+            }
+          </div>
+        </div>
+
+        <div class="linha">
+          <label for="precoCusto">Preço de custo</label>
+          <div class="campo">
+            <input id="precoCusto" type="number" min="0" step="0.01" formControlName="precoCusto"
+              placeholder="Digite o preço de custo" />
+            @if (invalido('precoCusto')) {
+              <small class="erro">Informe um preço igual ou maior que zero.</small>
+            }
+          </div>
+        </div>
+
+        <div class="linha">
+          <label for="categoria">Categoria</label>
+          <div class="campo">
+            <input id="categoria" type="text" formControlName="categoria" placeholder="Ex.: Alimentos" />
+            @if (invalido('categoria')) {
+              <small class="erro">Informe a categoria.</small>
+            }
+          </div>
+        </div>
+
+        <footer class="modal-acoes">
+          <button type="button" class="btn btn-outline" (click)="fecharModal()">Descartar</button>
+          <button type="submit" class="btn btn-primary">
+            {{ editandoId() === null ? 'Adicionar produto' : 'Salvar alterações' }}
+          </button>
+        </footer>
+      </form>
+    </div>
+  </div>
+}
