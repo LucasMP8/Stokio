@@ -20,7 +20,7 @@ O Stokio tem como principais objetivos:
 
 # 3. Tecnologias Utilizadas
 Backend
-    Java: linguagem de programação responsável pelas regras de negócio e pelo processamento das operações.
+    Typescript: linguagem de programação responsável pelas regras de negócio e pelo processamento das operações.
 Frontend
     Angular: framework responsável pela construção da interface web e pela interação com os usuários.
     HTML5 e CSS3: tecnologias para estruturação e estilização das interfaces.
