@@ -17,7 +17,8 @@
           <a
             class="card-side"
             routerLink="/produtos"
-            title="Ver produtos"
+            [queryParams]="{ estoque: estoque.id }"
+            title="Ver produtos deste estoque"
             (click)="$event.stopPropagation()"
             (keydown.enter)="$event.stopPropagation()"
           >

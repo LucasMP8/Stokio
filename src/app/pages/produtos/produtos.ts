@@ -1,5 +1,7 @@
 import { Component, HostListener, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 import { Produto } from '../../models/produto';
 import { EstoqueService } from '../../services/estoque.service';
@@ -19,6 +21,18 @@ export class Produtos {
   private readonly produtoService = inject(ProdutoService);
   private readonly estoqueService = inject(EstoqueService);
   private readonly fb = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
+
+  constructor() {
+    this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe((params) => {
+      const estoqueId = Number(params.get('estoque'));
+      if (estoqueId) {
+        this.filtroEstoque.set(estoqueId);
+        this.filtrosAbertos.set(true);
+        this.pagina.set(1);
+      }
+    });
+  }
 
   protected readonly estoques = this.estoqueService.estoques;
   protected readonly nextId = this.produtoService.nextId;
