@@ -22,7 +22,7 @@ const routes: Routes = [
     component: RegistroMovimento,
     title: 'Registro de movimento | Stokio',
   },
-  { path: 'settings', component: Settings, title: 'Settings | Stokio' },
+  { path: 'settings', component: Settings, title: 'Configurações | Stokio' },
   { path: '**', redirectTo: 'login' },
 ];
 
