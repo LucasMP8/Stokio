@@ -83,20 +83,20 @@
       <div class="filtros">
         <label>
           <span>Situação</span>
-          <select [value]="filtroSituacao()" (change)="filtrarPorSituacao($any($event.target).value)">
-            <option value="">Todas</option>
+          <select (change)="filtrarPorSituacao($any($event.target).value)">
+            <option value="" [selected]="!filtroSituacao()">Todas</option>
             @for (s of situacoes; track s.valor) {
-              <option [value]="s.valor">{{ s.rotulo }}</option>
+              <option [value]="s.valor" [selected]="s.valor === filtroSituacao()">{{ s.rotulo }}</option>
             }
           </select>
         </label>
 
         <label>
           <span>Estoque</span>
-          <select [value]="filtroEstoque()" (change)="filtrarPorEstoque($any($event.target).value)">
-            <option value="">Todos</option>
+          <select (change)="filtrarPorEstoque($any($event.target).value)">
+            <option value="" [selected]="!filtroEstoque()">Todos</option>
             @for (e of estoques(); track e.id) {
-              <option [value]="e.id">{{ e.nome }}</option>
+              <option [value]="e.id" [selected]="e.id === filtroEstoque()">{{ e.nome }}</option>
             }
           </select>
         </label>
