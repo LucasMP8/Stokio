@@ -1,6 +1,110 @@
-<h1 class="page-title">Registro de movimento</h1>
+<div class="registro-page">
+  <section class="banner">
+    <div class="banner-texto">
+      <p>Registro de movimentação · Adicione ou retire unidades dos produtos.</p>
+    </div>
 
-<div class="placeholder-box">
-  <p>Esta página será implementada nas próximas etapas.</p>
-  <button type="button" class="btn btn-primary" (click)="goToInventory()">Ir para Gerenciar inventário</button>
+    <div class="banner-data">
+      <span>Hoje é</span>
+      <strong>{{ hoje }}</strong>
+    </div>
+
+    <div class="banner-logo" role="img" aria-label="Stokio">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"
+        stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+        <line x1="12" y1="22.08" x2="12" y2="12" />
+      </svg>
+      <span>STOKIO</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Produtos</h2>
+
+    <div class="tabela-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Quantidade mínima</th>
+            <th class="acao">Movimentação</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (produto of produtos(); track produto.id) {
+            <tr>
+              <td>{{ produto.nome }}</td>
+              <td [class.alerta]="abaixoDoMinimo(produto)">
+                {{ formatarQuantidade(produto.quantidade, produto.unidade) }}
+              </td>
+              <td>{{ formatarQuantidade(produto.estoqueMinimo, produto.unidade) }}</td>
+              <td class="acao">
+                <button type="button" class="btn btn-outline" (click)="abrirMovimento(produto)">
+                  Adicionar / Retirar
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr class="vazio">
+              <td colspan="4">Nenhum produto cadastrado.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="placeholder-box">
+    <p>Esta página ainda está em desenvolvimento e receberá atualizações nas próximas etapas.</p>
+    <button type="button" class="btn btn-primary" (click)="irParaInventario()">Ir para Gerenciar inventário</button>
+  </div>
 </div>
+
+@if (selecionado(); as produto) {
+  <div class="modal-backdrop" (click)="fechar()">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-mov" (click)="$event.stopPropagation()">
+      <h2 id="titulo-mov">Movimentar produto</h2>
+      <p class="produto-atual">
+        <strong>{{ produto.nome }}</strong>
+        <span>Quantidade atual: {{ formatarQuantidade(produto.quantidade, produto.unidade) }}</span>
+      </p>
+
+      <form [formGroup]="form" (ngSubmit)="confirmar()" novalidate>
+        <div class="tipos" role="radiogroup" aria-label="Tipo de movimentação">
+          <label class="tipo">
+            <input type="radio" formControlName="tipo" value="entrada" />
+            Adicionar
+          </label>
+          <label class="tipo">
+            <input type="radio" formControlName="tipo" value="saida" />
+            Retirar
+          </label>
+        </div>
+
+        <label class="campo" for="qtd">
+          <span>Quantidade</span>
+          <input id="qtd" type="number" min="1" step="1" formControlName="quantidade" placeholder="Digite a quantidade" />
+        </label>
+        @if (quantidadeInvalida()) {
+          <small class="erro">Informe um número inteiro maior que zero.</small>
+        } @else if (saidaInvalida()) {
+          <small class="erro">Não é possível retirar mais do que a quantidade atual.</small>
+        }
+
+        @if (novaQuantidade() !== null) {
+          <p class="previa">
+            Nova quantidade: <strong>{{ formatarQuantidade(novaQuantidade()!, produto.unidade) }}</strong>
+          </p>
+        }
+
+        <footer class="modal-acoes">
+          <button type="button" class="btn btn-outline" (click)="fechar()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Confirmar</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+}
