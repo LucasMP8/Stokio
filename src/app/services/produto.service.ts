@@ -5,6 +5,8 @@ import { MOCK_PRODUTOS } from '../mocks/mock-produtos';
 
 export type Situacao = 'em-estoque' | 'estoque-baixo' | 'sem-estoque';
 
+export type TipoMovimento = 'entrada' | 'saida';
+
 /** Campos informados no formulário; código, unidade e ativo são definidos pelo service. */
 export type ProdutoInput = Pick<
   Produto,
@@ -42,6 +44,18 @@ export class ProdutoService {
     let updated: Produto | undefined;
     this.lista.update((list) =>
       list.map((p) => (p.id === id ? (updated = { ...p, ...this.clean(data) }) : p)),
+    );
+    return updated;
+  }
+
+  /** Adiciona (entrada) ou retira (saída) unidades de um produto. */
+  movimentar(id: number, tipo: TipoMovimento, quantidade: number): Produto | undefined {
+    let updated: Produto | undefined;
+    const delta = tipo === 'entrada' ? quantidade : -quantidade;
+    this.lista.update((list) =>
+      list.map((p) =>
+        p.id === id ? (updated = { ...p, quantidade: Math.max(0, p.quantidade + delta) }) : p,
+      ),
     );
     return updated;
   }
