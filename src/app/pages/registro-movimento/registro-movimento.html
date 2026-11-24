@@ -88,6 +88,23 @@
           </label>
         </div>
 
+        @if (ehSaida()) {
+          <div class="motivo">
+            <span>Motivo da retirada</span>
+            <div class="motivos" role="radiogroup" aria-label="Motivo da retirada">
+              @for (m of motivos; track m.valor) {
+                <label class="opcao-motivo">
+                  <input type="radio" formControlName="motivo" [value]="m.valor" />
+                  {{ m.rotulo }}
+                </label>
+              }
+            </div>
+            @if (motivoInvalido()) {
+              <small class="erro">Selecione o motivo da retirada.</small>
+            }
+          </div>
+        }
+
         <label class="campo" for="qtd">
           <span>Quantidade</span>
           <input id="qtd" type="number" min="1" step="1" formControlName="quantidade" placeholder="Digite a quantidade" />
