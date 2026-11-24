@@ -47,6 +47,13 @@ describe('ProdutoService', () => {
     expect(produto?.unidade).toBe('Pacote');
   });
 
+  it('should add and remove units', () => {
+    expect(service.movimentar(1, 'entrada', 5)?.quantidade).toBe(40);
+    expect(service.movimentar(1, 'saida', 15)?.quantidade).toBe(25);
+    expect(service.getById(1)?.quantidade).toBe(25);
+    expect(service.getById(2)?.quantidade).toBe(8);
+  });
+
   it('should compute the stock situation', () => {
     const base = service.getById(1)!;
     expect(service.situacao({ ...base, quantidade: 0 })).toBe('sem-estoque');
