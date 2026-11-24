@@ -10,7 +10,13 @@
     </p>
   }
 
-  @if (estoques().length > 0) {
+  @if (erroCarregar()) {
+    <p class="aviso-api">{{ erroCarregar() }}</p>
+  }
+
+  @if (carregando()) {
+    <p class="carregando">Carregando estoques...</p>
+  } @else if (estoques().length > 0) {
     <ul class="card-list">
       @for (estoque of estoques(); track estoque.id) {
         <li class="card" tabindex="0" (click)="viewDetails(estoque)" (keydown.enter)="viewDetails(estoque)">
@@ -132,10 +138,14 @@
           </label>
         </div>
 
+        @if (erroSalvar()) {
+          <p class="aviso-api">{{ erroSalvar() }}</p>
+        }
+
         <footer class="modal-footer">
           <button type="button" class="btn btn-outline" (click)="closeForm()">Cancelar</button>
-          <button type="submit" class="btn btn-primary">
-            {{ editingId() === null ? 'Criar estoque' : 'Salvar alterações' }}
+          <button type="submit" class="btn btn-primary" [disabled]="salvando()">
+            {{ salvando() ? 'Salvando...' : editingId() === null ? 'Criar estoque' : 'Salvar alterações' }}
           </button>
         </footer>
       </form>

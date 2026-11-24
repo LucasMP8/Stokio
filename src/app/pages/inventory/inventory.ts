@@ -18,15 +18,20 @@ export class Inventory {
   protected readonly estoques = this.estoqueService.filteredEstoques;
   protected readonly searchTerm = this.estoqueService.searchTerm;
   protected readonly nextId = this.estoqueService.nextId;
+  protected readonly carregando = this.estoqueService.carregando;
+  protected readonly erroCarregar = this.estoqueService.erro;
 
   /** Controle do formulário (modal) de criação/edição. */
   protected readonly isFormOpen = signal(false);
   protected readonly editingId = signal<number | null>(null);
+  protected readonly salvando = signal(false);
+  protected readonly erroSalvar = signal<string | null>(null);
   protected form: EstoqueInput = this.emptyForm();
 
   openCreate(): void {
     this.editingId.set(null);
     this.form = this.emptyForm();
+    this.erroSalvar.set(null);
     this.isFormOpen.set(true);
   }
 
@@ -35,6 +40,7 @@ export class Inventory {
     this.editingId.set(estoque.id);
     const { id, ...dados } = estoque;
     this.form = dados;
+    this.erroSalvar.set(null);
     this.isFormOpen.set(true);
   }
 
@@ -50,12 +56,21 @@ export class Inventory {
     }
 
     const id = this.editingId();
-    if (id === null) {
-      this.estoqueService.add(this.form);
-    } else {
-      this.estoqueService.update(id, this.form);
-    }
-    this.closeForm();
+    const requisicao =
+      id === null ? this.estoqueService.add(this.form) : this.estoqueService.update(id, this.form);
+
+    this.salvando.set(true);
+    this.erroSalvar.set(null);
+    requisicao.subscribe({
+      next: () => {
+        this.salvando.set(false);
+        this.closeForm();
+      },
+      error: () => {
+        this.salvando.set(false);
+        this.erroSalvar.set('Não foi possível salvar. Verifique se a API está rodando.');
+      },
+    });
   }
 
   viewDetails(estoque: Estoque): void {
