@@ -25,6 +25,10 @@ export class RegistroMovimento {
   });
 
   protected readonly selecionado = signal<Produto | null>(null);
+  protected readonly salvando = signal(false);
+  protected readonly erroSalvar = signal<string | null>(null);
+  protected readonly carregando = this.produtoService.carregando;
+  protected readonly erroCarregar = this.produtoService.erro;
 
   protected readonly form = this.fb.group(
     {
@@ -52,6 +56,7 @@ export class RegistroMovimento {
   }
 
   abrirMovimento(produto: Produto): void {
+    this.erroSalvar.set(null);
     this.selecionado.set(produto);
     this.form.reset({ tipo: 'entrada', quantidade: null });
   }
@@ -79,8 +84,22 @@ export class RegistroMovimento {
       return;
     }
     const { tipo, quantidade } = this.form.getRawValue();
-    this.produtoService.movimentar(produto.id, tipo, Number(quantidade));
-    this.fechar();
+    this.salvando.set(true);
+    this.erroSalvar.set(null);
+    this.produtoService.movimentar(produto.id, tipo, Number(quantidade)).subscribe({
+      next: () => {
+        this.salvando.set(false);
+        this.fechar();
+      },
+      error: (erro: unknown) => {
+        this.salvando.set(false);
+        this.erroSalvar.set(
+          erro instanceof Error
+            ? erro.message
+            : 'Não foi possível registrar. Verifique se a API está rodando.',
+        );
+      },
+    });
   }
 
   quantidadeInvalida(): boolean {

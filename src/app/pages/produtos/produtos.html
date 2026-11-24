@@ -1,4 +1,8 @@
 <div class="produtos-page">
+  @if (erroCarregar()) {
+    <p class="aviso-api">{{ erroCarregar() }}</p>
+  }
+
   <section class="card resumo">
     <h2>Inventário geral</h2>
 
@@ -129,7 +133,9 @@
             </tr>
           } @empty {
             <tr class="vazio">
-              <td colspan="5">Nenhum produto encontrado com esses filtros.</td>
+              <td colspan="5">
+                {{ carregando() ? 'Carregando produtos...' : 'Nenhum produto encontrado com esses filtros.' }}
+              </td>
             </tr>
           }
         </tbody>
@@ -240,10 +246,14 @@
           </div>
         </div>
 
+        @if (erroSalvar()) {
+          <p class="aviso-api">{{ erroSalvar() }}</p>
+        }
+
         <footer class="modal-acoes">
           <button type="button" class="btn btn-outline" (click)="fecharModal()">Descartar</button>
-          <button type="submit" class="btn btn-primary">
-            {{ editandoId() === null ? 'Adicionar produto' : 'Salvar alterações' }}
+          <button type="submit" class="btn btn-primary" [disabled]="salvando()">
+            {{ salvando() ? 'Salvando...' : editandoId() === null ? 'Adicionar produto' : 'Salvar alterações' }}
           </button>
         </footer>
       </form>

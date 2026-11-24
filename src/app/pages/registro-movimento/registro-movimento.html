@@ -20,6 +20,10 @@
     </div>
   </section>
 
+  @if (erroCarregar()) {
+    <p class="aviso-api">{{ erroCarregar() }}</p>
+  }
+
   <section class="card">
     <h2>Produtos</h2>
 
@@ -49,7 +53,7 @@
             </tr>
           } @empty {
             <tr class="vazio">
-              <td colspan="4">Nenhum produto cadastrado.</td>
+              <td colspan="4">{{ carregando() ? 'Carregando produtos...' : 'Nenhum produto cadastrado.' }}</td>
             </tr>
           }
         </tbody>
@@ -100,9 +104,15 @@
           </p>
         }
 
+        @if (erroSalvar()) {
+          <p class="aviso-api">{{ erroSalvar() }}</p>
+        }
+
         <footer class="modal-acoes">
           <button type="button" class="btn btn-outline" (click)="fechar()">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Confirmar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="salvando()">
+            {{ salvando() ? 'Salvando...' : 'Confirmar' }}
+          </button>
         </footer>
       </form>
     </div>
