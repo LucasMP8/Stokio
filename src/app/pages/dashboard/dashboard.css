@@ -304,3 +304,10 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+.msg-erro {
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: bold;
+  margin: 0 0 16px 0;
+}

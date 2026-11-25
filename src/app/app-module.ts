@@ -1,6 +1,6 @@
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing-module';
@@ -32,11 +32,7 @@ import { Settings } from './pages/settings/settings';
     Settings,
   ],
   imports: [BrowserModule, FormsModule, ReactiveFormsModule, AppRoutingModule],
-  providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideClientHydration(),
-    provideHttpClient(withFetch()),
-  ],
+  providers: [provideBrowserGlobalErrorListeners(), provideClientHydration(), provideHttpClient()],
   bootstrap: [App],
 })
 export class AppModule {}

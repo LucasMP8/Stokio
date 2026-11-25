@@ -1,6 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Produto } from '../../models/produto';
+import { MovimentacaoService } from '../../services/movimentacao.service';
+import { ProdutoService } from '../../services/produto';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,89 +10,140 @@ import { Produto } from '../../models/produto';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard {
+export class Dashboard implements OnInit {
   private readonly router = inject(Router);
+  private readonly produtoService = inject(ProdutoService);
+  private readonly movimentacaoService = inject(MovimentacaoService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
-  produtos: Produto[] = [
-    {
-      id: 1,
-      codigo: 'SKU-001',
-      nome: 'Café Torrado 500g',
-      categoria: 'Alimentos',
-      precoCusto: 12.5,
-      precoVenda: 19.9,
-      quantidade: 35,
-      estoqueMinimo: 10,
-      unidade: 'Pacote',
-      ativo: true,
-      estoqueId: 1,
-    },
-    {
-      id: 2,
-      codigo: 'SKU-002',
-      nome: 'Refrigerante Cola 2L',
-      categoria: 'Bebidas',
-      precoCusto: 5.2,
-      precoVenda: 9.5,
-      quantidade: 8,
-      estoqueMinimo: 10,
-      unidade: 'Unidade',
-      ativo: true,
-      estoqueId: 1,
-    },
-    {
-      id: 3,
-      codigo: 'SKU-003',
-      nome: 'Detergente Neutro',
-      categoria: 'Limpeza',
-      precoCusto: 1.8,
-      precoVenda: 3.5,
-      quantidade: 50,
-      estoqueMinimo: 15,
-      unidade: 'Unidade',
-      ativo: true,
-      estoqueId: 2,
-    },
-    {
-      id: 4,
-      codigo: 'SKU-004',
-      nome: 'Sabão em Pó 1kg',
-      categoria: 'Limpeza',
-      precoCusto: 9.0,
-      precoVenda: 15.9,
-      quantidade: 4,
-      estoqueMinimo: 8,
-      unidade: 'Caixa',
-      ativo: true,
-      estoqueId: 2,
-    },
-    {
-      id: 5,
-      codigo: 'SKU-005',
-      nome: 'Biscoito Recheado',
-      categoria: 'Alimentos',
-      precoCusto: 2.1,
-      precoVenda: 4.2,
-      quantidade: 0,
-      estoqueMinimo: 12,
-      unidade: 'Pacote',
-      ativo: false,
-      estoqueId: 3,
-    },
+  private readonly mesesAbreviados = [
+    'Jan',
+    'Fev',
+    'Mar',
+    'Abr',
+    'Mai',
+    'Jun',
+    'Jul',
+    'Ago',
+    'Set',
+    'Out',
+    'Nov',
+    'Dez',
   ];
 
-  totalEntradas: number = 0;
-  totalSaidas: number = 0;
-  totalDevolucoes: number = 0;
-  totalPerdas: number = 0;
-  dadosGrafico: dadoGraficoMensal[] = [
-    { mes: 'Jun', entradas: 45, saidas: 32 },
-    { mes: 'Jul', entradas: 58, saidas: 44 },
-    { mes: 'Ago', entradas: 38, saidas: 41 },
-    { mes: 'Set', entradas: 52, saidas: 35 },
-    { mes: 'Out', entradas: 48, saidas: 46 },
-    { mes: 'Nov', entradas: 55, saidas: 39 },
-  ];
+  produtos: Produto[] = [];
+  erroProdutos: string = '';
+
+  private readonly resumoMovimentacoes = computed(() => {
+    const movimentacoes = this.movimentacaoService.movimentacoes();
+    let entradas = 0;
+    let saidas = 0;
+    let vendas = 0;
+    let perdas = 0;
+
+    for (const mov of movimentacoes) {
+      if (mov.tipo === 'entrada') {
+        entradas += mov.quantidade;
+      } else if (mov.tipo === 'saida') {
+        saidas += mov.quantidade;
+        if (mov.motivo === 'venda') {
+          vendas += mov.quantidade;
+        } else if (mov.motivo === 'perda' || mov.motivo === 'uso-interno') {
+          perdas += mov.quantidade;
+        }
+      }
+    }
+
+    return { entradas, saidas, vendas, perdas };
+  });
+
+  private readonly dadosGraficoCalculados = computed<dadoGraficoMensal[]>(() => {
+    const movimentacoes = this.movimentacaoService.movimentacoes();
+    const hoje = new Date();
+    const meses: {
+      ano: number;
+      mesIndex: number;
+      mes: string;
+      entradas: number;
+      saidas: number;
+    }[] = [];
+
+    for (let i = 5; i >= 0; i--) {
+      const ref = new Date(hoje.getFullYear(), hoje.getMonth() - i, 1);
+      meses.push({
+        ano: ref.getFullYear(),
+        mesIndex: ref.getMonth(),
+        mes: this.mesesAbreviados[ref.getMonth()],
+        entradas: 0,
+        saidas: 0,
+      });
+    }
+
+    for (const mov of movimentacoes) {
+      const dataMov = new Date(mov.data);
+      if (Number.isNaN(dataMov.getTime())) {
+        continue;
+      }
+
+      const bucket = meses.find(
+        (m) => m.ano === dataMov.getFullYear() && m.mesIndex === dataMov.getMonth(),
+      );
+
+      if (!bucket) {
+        continue;
+      }
+
+      if (mov.tipo === 'entrada') {
+        bucket.entradas += mov.quantidade;
+      } else if (mov.tipo === 'saida') {
+        bucket.saidas += mov.quantidade;
+      }
+    }
+
+    return meses.map(({ mes, entradas, saidas }) => ({ mes, entradas, saidas }));
+  });
+
+  ngOnInit(): void {
+    this.carregarProdutos();
+  }
+
+  carregarProdutos(): void {
+    this.erroProdutos = '';
+    this.produtoService.listar().subscribe({
+      next: (produtos) => {
+        this.produtos = produtos;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.erroProdutos = 'Não foi possível carregar os produtos do servidor.';
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  get erroCarregamento(): string {
+    return this.erroProdutos || this.movimentacaoService.erro() || '';
+  }
+
+  get totalEntradas(): number {
+    return this.resumoMovimentacoes().entradas;
+  }
+
+  get totalSaidas(): number {
+    return this.resumoMovimentacoes().saidas;
+  }
+
+  get totalVendas(): number {
+    return this.resumoMovimentacoes().vendas;
+  }
+
+  get totalPerdas(): number {
+    return this.resumoMovimentacoes().perdas;
+  }
+
+  get dadosGrafico(): dadoGraficoMensal[] {
+    return this.dadosGraficoCalculados();
+  }
 
   get tetoGrafico(): number {
     const valores = this.dadosGrafico.flatMap((d) => [d.entradas, d.saidas]);
@@ -177,5 +230,3 @@ interface dadoGraficoMensal {
   entradas: number;
   saidas: number;
 }
-
-

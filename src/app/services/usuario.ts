@@ -1,38 +1,27 @@
-import { Service } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { map, Observable } from 'rxjs';
 import { Usuario } from '../models/usuario';
 
-@Service()
+@Injectable({
+  providedIn: 'root',
+})
 export class UsuarioService {
-  private usuarios: Usuario[] = [
-    {
-      id: 1,
-      nome: 'Jason Durião',
-      email: 'jasond@gmail.com',
-      senha: 'vicecity',
-      perfil: 'admin',
-    },
-    {
-      id: 2,
-      nome: 'Lucia Kamio',
-      email: 'luciakamio@gmail.com',
-      senha: '00000000',
-      perfil: 'user',
-    },
-  ];
+  private readonly apiUrl = 'http://localhost:3000/usuarios';
 
-listar(): Usuario[] {
-    return this.usuarios;
-}
+  constructor(private http: HttpClient) {}
 
-cadastrar(novoUsuario: Usuario): void{
-    novoUsuario.id = this.usuarios.length  +1;
-    this.usuarios.push(novoUsuario)
-}
+  listar(): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(this.apiUrl);
+  }
 
-autenticar(email: string, senha: string): Usuario | undefined{
-  return this.usuarios.find(
-    (usuarios) => usuarios.email === email && usuarios.senha === senha
-  );
-} 
+  cadastrar(novoUsuario: Usuario): Observable<Usuario> {
+    return this.http.post<Usuario>(this.apiUrl, novoUsuario);
+  }
 
+  autenticar(email: string, senha: string): Observable<Usuario | undefined> {
+    const params = new HttpParams().set('email', email).set('senha', senha);
+
+    return this.http.get<Usuario[]>(this.apiUrl, { params }).pipe(map((usuarios) => usuarios[0]));
+  }
 }

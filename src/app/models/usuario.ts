@@ -1,7 +1,7 @@
 export interface Usuario {
-  id: number;
+  id?: number | string;
   nome: string;
   email: string;
   senha: string;
-  perfil: 'admin' | 'user'
+  perfil: 'admin' | 'user';
 }

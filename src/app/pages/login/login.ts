@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UsuarioService } from '../../services/usuario';
@@ -21,6 +21,7 @@ export class Login {
   constructor(
     private usuarioService: UsuarioService,
     private router: Router,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   emailFormatoInvalido(): boolean {
@@ -66,13 +67,21 @@ export class Login {
       return;
     }
 
-    const usuarioEncontrado = this.usuarioService.autenticar(email, senha);
+    this.usuarioService.autenticar(email, senha).subscribe({
+      next: (usuarioEncontrado) => {
+        if (!usuarioEncontrado) {
+          this.msgErro = 'Email ou senha inválidos.';
+          this.cdr.detectChanges();
+          return;
+        }
 
-    if (!usuarioEncontrado) {
-      this.msgErro = 'Email ou senha inválidos.';
-      return;
-    }
-
-    this.router.navigate(['/dashboard']);
+        this.router.navigate(['/dashboard']);
+      },
+      error: () => {
+        this.msgErro =
+          'Não foi possível conectar ao servidor. Verifique se o JSON-Server está ativo.';
+        this.cdr.detectChanges();
+      },
+    });
   }
 }
