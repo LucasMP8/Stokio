@@ -1,5 +1,8 @@
 <div class="dashboard-page">
   <header class="page-header">
+    @if (erroCarregamento) {
+      <p class="msg-erro">{{ erroCarregamento }}</p>
+    }
     <h1>Dashboard</h1>
     <button type="button" class="btn-dark" (click)="goToInventory()">Gerenciar estoques</button>
   </header>

@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Produto } from '../../models/produto';
+import { ProdutoService } from '../../services/produto';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,76 +9,13 @@ import { Produto } from '../../models/produto';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard {
+export class Dashboard implements OnInit {
   private readonly router = inject(Router);
+  private readonly produtoService = inject(ProdutoService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
-  produtos: Produto[] = [
-    {
-      id: 1,
-      codigo: 'SKU-001',
-      nome: 'Café Torrado 500g',
-      categoria: 'Alimentos',
-      precoCusto: 12.5,
-      precoVenda: 19.9,
-      quantidade: 35,
-      estoqueMinimo: 10,
-      unidade: 'Pacote',
-      ativo: true,
-      estoqueId: 1,
-    },
-    {
-      id: 2,
-      codigo: 'SKU-002',
-      nome: 'Refrigerante Cola 2L',
-      categoria: 'Bebidas',
-      precoCusto: 5.2,
-      precoVenda: 9.5,
-      quantidade: 8,
-      estoqueMinimo: 10,
-      unidade: 'Unidade',
-      ativo: true,
-      estoqueId: 1,
-    },
-    {
-      id: 3,
-      codigo: 'SKU-003',
-      nome: 'Detergente Neutro',
-      categoria: 'Limpeza',
-      precoCusto: 1.8,
-      precoVenda: 3.5,
-      quantidade: 50,
-      estoqueMinimo: 15,
-      unidade: 'Unidade',
-      ativo: true,
-      estoqueId: 2,
-    },
-    {
-      id: 4,
-      codigo: 'SKU-004',
-      nome: 'Sabão em Pó 1kg',
-      categoria: 'Limpeza',
-      precoCusto: 9.0,
-      precoVenda: 15.9,
-      quantidade: 4,
-      estoqueMinimo: 8,
-      unidade: 'Caixa',
-      ativo: true,
-      estoqueId: 2,
-    },
-    {
-      id: 5,
-      codigo: 'SKU-005',
-      nome: 'Biscoito Recheado',
-      categoria: 'Alimentos',
-      precoCusto: 2.1,
-      precoVenda: 4.2,
-      quantidade: 0,
-      estoqueMinimo: 12,
-      unidade: 'Pacote',
-      ativo: false,
-      estoqueId: 3,
-    },
-  ];
+  produtos: Produto[] = [];
+  erroCarregamento: string = '';
 
   totalEntradas: number = 0;
   totalSaidas: number = 0;
@@ -91,6 +29,24 @@ export class Dashboard {
     { mes: 'Out', entradas: 48, saidas: 46 },
     { mes: 'Nov', entradas: 55, saidas: 39 },
   ];
+
+  ngOnInit(): void {
+    this.carregarProdutos();
+  }
+
+  carregarProdutos(): void {
+    this.erroCarregamento = '';
+    this.produtoService.listar().subscribe({
+      next: (produtos) => {
+        this.produtos = produtos;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.erroCarregamento = 'Não foi possível carregar os produtos do servidor.';
+        this.cdr.detectChanges();
+      },
+    });
+  }
 
   get tetoGrafico(): number {
     const valores = this.dadosGrafico.flatMap((d) => [d.entradas, d.saidas]);
@@ -177,5 +133,3 @@ interface dadoGraficoMensal {
   entradas: number;
   saidas: number;
 }
-
-
