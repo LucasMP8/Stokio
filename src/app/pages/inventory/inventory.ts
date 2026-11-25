@@ -1,5 +1,5 @@
 import { Component, HostListener, inject, signal } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Estoque } from '../../models/estoque';
@@ -16,6 +16,7 @@ export class Inventory {
   private readonly estoqueService = inject(EstoqueService);
   private readonly produtoService = inject(ProdutoService);
   private readonly router = inject(Router);
+  private readonly fb = inject(FormBuilder);
 
   protected readonly estoques = this.estoqueService.filteredEstoques;
   protected readonly searchTerm = this.estoqueService.searchTerm;
@@ -28,11 +29,16 @@ export class Inventory {
   protected readonly editingId = signal<number | null>(null);
   protected readonly salvando = signal(false);
   protected readonly erroSalvar = signal<string | null>(null);
-  protected form: EstoqueInput = this.emptyForm();
+  protected readonly form = this.fb.nonNullable.group({
+    nome: ['', [Validators.required, Validators.maxLength(40)]],
+    endereco: ['', [Validators.required, Validators.maxLength(100)]],
+    cidade: ['', [Validators.required, Validators.maxLength(40)]],
+    telefone: ['', [Validators.required, Validators.pattern(/^[\d\s()+-]{8,20}$/)]],
+  });
 
   openCreate(): void {
     this.editingId.set(null);
-    this.form = this.emptyForm();
+    this.form.reset();
     this.erroSalvar.set(null);
     this.isFormOpen.set(true);
   }
@@ -41,7 +47,7 @@ export class Inventory {
     event?.stopPropagation();
     this.editingId.set(estoque.id);
     const { id, ...dados } = estoque;
-    this.form = dados;
+    this.form.reset(dados);
     this.erroSalvar.set(null);
     this.isFormOpen.set(true);
   }
@@ -51,15 +57,16 @@ export class Inventory {
     this.editingId.set(null);
   }
 
-  save(ngForm: NgForm): void {
-    if (ngForm.invalid) {
-      ngForm.control.markAllAsTouched();
+  save(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
       return;
     }
 
     const id = this.editingId();
+    const dados: EstoqueInput = this.form.getRawValue();
     const requisicao =
-      id === null ? this.estoqueService.add(this.form) : this.estoqueService.update(id, this.form);
+      id === null ? this.estoqueService.add(dados) : this.estoqueService.update(id, dados);
 
     this.salvando.set(true);
     this.erroSalvar.set(null);
@@ -113,7 +120,8 @@ export class Inventory {
     }
   }
 
-  private emptyForm(): EstoqueInput {
-    return { nome: '', endereco: '', cidade: '', telefone: '' };
+  invalido(campo: keyof EstoqueInput): boolean {
+    const controle = this.form.controls[campo];
+    return controle.invalid && controle.touched;
   }
 }

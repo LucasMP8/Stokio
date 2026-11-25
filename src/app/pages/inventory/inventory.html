@@ -70,20 +70,16 @@
         <span class="modal-id">ID #{{ editingId() ?? nextId() }}</span>
       </header>
 
-      <form #estoqueForm="ngForm" (ngSubmit)="save(estoqueForm)" novalidate>
+      <form [formGroup]="form" (ngSubmit)="save()" novalidate>
         <label class="field">
           <span>Nome</span>
           <input
-            name="nome"
+            formControlName="nome"
             type="text"
             placeholder="Ex.: Bond"
-            required
-            maxlength="40"
-            [(ngModel)]="form.nome"
-            #nome="ngModel"
             autofocus
           />
-          @if (nome.invalid && nome.touched) {
+          @if (invalido('nome')) {
             <small class="error">Informe o nome.</small>
           }
         </label>
@@ -91,15 +87,11 @@
         <label class="field">
           <span>Endereço</span>
           <input
-            name="endereco"
+            formControlName="endereco"
             type="text"
             placeholder="Ex.: Rua dos almirantes, 1002"
-            required
-            maxlength="100"
-            [(ngModel)]="form.endereco"
-            #endereco="ngModel"
           />
-          @if (endereco.invalid && endereco.touched) {
+          @if (invalido('endereco')) {
             <small class="error">Informe o endereço.</small>
           }
         </label>
@@ -108,15 +100,11 @@
           <label class="field">
             <span>Cidade</span>
             <input
-              name="cidade"
+              formControlName="cidade"
               type="text"
               placeholder="Ex.: BH"
-              required
-              maxlength="40"
-              [(ngModel)]="form.cidade"
-              #cidade="ngModel"
             />
-            @if (cidade.invalid && cidade.touched) {
+            @if (invalido('cidade')) {
               <small class="error">Informe a cidade.</small>
             }
           </label>
@@ -124,16 +112,12 @@
           <label class="field">
             <span>Telefone</span>
             <input
-              name="telefone"
+              formControlName="telefone"
               type="tel"
               placeholder="Ex.: 000000007"
-              required
-              maxlength="20"
-              [(ngModel)]="form.telefone"
-              #telefone="ngModel"
             />
-            @if (telefone.invalid && telefone.touched) {
-              <small class="error">Informe o telefone.</small>
+            @if (invalido('telefone')) {
+              <small class="error">Informe um telefone válido (8 a 20 dígitos).</small>
             }
           </label>
         </div>
