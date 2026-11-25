@@ -66,13 +66,19 @@ export class Login {
       return;
     }
 
-    const usuarioEncontrado = this.usuarioService.autenticar(email, senha);
+    this.usuarioService.autenticar(email, senha).subscribe({
+      next: (usuarioEncontrado) => {
+        if (!usuarioEncontrado) {
+          this.msgErro = 'Email ou senha inválidos.';
+          return;
+        }
 
-    if (!usuarioEncontrado) {
-      this.msgErro = 'Email ou senha inválidos.';
-      return;
-    }
-
-    this.router.navigate(['/dashboard']);
+        this.router.navigate(['/dashboard']);
+      },
+      error: () => {
+        this.msgErro =
+          'Não foi possível conectar ao servidor. Verifique se o JSON-Server está ativo.';
+      },
+    });
   }
 }

@@ -30,7 +30,9 @@ export class Cadastro {
       return false;
     }
     const controle = this.formularioCadastro.get(campo);
-    return Boolean(controle && controle.hasError('required') && (controle.touched || controle.dirty));
+    return Boolean(
+      controle && controle.hasError('required') && (controle.touched || controle.dirty),
+    );
   }
 
   emailFormatoInvalido(): boolean {
@@ -81,12 +83,21 @@ export class Cadastro {
     }
 
     const novoUsuario: Usuario = {
-      id: 0,
       nome,
       email,
       senha,
       perfil: 'user',
     };
+
+    this.usuarioService.cadastrar(novoUsuario).subscribe({
+      next: () => {
+        this.router.navigate(['/dashboard']);
+      },
+      error: () => {
+        this.msgErro =
+          'Não foi possível realizar o cadastro. Verifique se o JSON-Server está ativo.';
+      },
+    });
 
     this.usuarioService.cadastrar(novoUsuario);
     this.router.navigate(['/dashboard']);
