@@ -1,11 +1,12 @@
 <div class="dashboard-page">
   <header class="page-header">
-    @if (erroCarregamento) {
-      <p class="msg-erro">{{ erroCarregamento }}</p>
-    }
     <h1>Dashboard</h1>
     <button type="button" class="btn-dark" (click)="goToInventory()">Gerenciar estoques</button>
   </header>
+
+  @if (erroCarregamento) {
+    <p class="msg-erro">{{ erroCarregamento }}</p>
+  }
 
   <div class="dashboard-grid">
     <section class="card">
@@ -56,8 +57,8 @@
           <span class="metric-label">Saídas</span>
         </div>
         <div class="metric-item">
-          <span class="metric-value">{{ totalDevolucoes }}</span>
-          <span class="metric-label">Devoluções</span>
+          <span class="metric-value">{{ totalVendas }}</span>
+          <span class="metric-label">Vendas</span>
         </div>
         <div class="metric-item">
           <span class="metric-value">{{ totalPerdas }}</span>

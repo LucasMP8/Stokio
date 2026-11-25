@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Usuario } from '../../models/usuario';
@@ -23,6 +23,7 @@ export class Cadastro {
   constructor(
     private usuarioService: UsuarioService,
     private router: Router,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   campoVazio(campo: string): boolean {
@@ -96,6 +97,7 @@ export class Cadastro {
       error: () => {
         this.msgErro =
           'Não foi possível realizar o cadastro. Verifique se o JSON-Server está ativo.';
+        this.cdr.detectChanges();
       },
     });
 
