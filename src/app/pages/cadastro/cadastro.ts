@@ -7,8 +7,8 @@ import { UsuarioService } from '../../services/usuario';
 @Component({
   selector: 'app-cadastro',
   standalone: false,
-  templateUrl: './cadastro.html',
   styleUrl: './cadastro.css',
+  templateUrl: './cadastro.html',
 })
 export class Cadastro {
   msgErro: string = '';
@@ -30,9 +30,7 @@ export class Cadastro {
       return false;
     }
     const controle = this.formularioCadastro.get(campo);
-    return Boolean(
-      controle && controle.hasError('required') && (controle.touched || controle.dirty),
-    );
+    return Boolean(controle && controle.hasError('required') && (controle.touched || controle.dirty));
   }
 
   emailFormatoInvalido(): boolean {
