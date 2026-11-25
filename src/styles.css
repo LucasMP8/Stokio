@@ -75,6 +75,22 @@ textarea {
   background: #fafafa;
 }
 
+.btn-excluir {
+  margin-right: auto;
+  background: #fff;
+  color: #d14343;
+  border: 1px solid #f1c4c4;
+}
+
+.btn-excluir:hover {
+  background: #fdf2f2;
+}
+
+.btn-excluir:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Páginas ainda não implementadas */
 .page-title {
   font-size: 18px;
@@ -92,4 +108,23 @@ textarea {
 
 .placeholder-box p {
   margin: 0 0 16px;
+}
+
+/* Mensagens da comunicação com a API */
+.aviso-api {
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border: 1px solid #f5c2c0;
+  border-radius: 6px;
+  background: #fdf1f0;
+  font-size: 13px;
+  color: #b42318;
+}
+
+.carregando {
+  margin: 0;
+  padding: 32px 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
 }

@@ -125,5 +125,6 @@
       "ativo": false,
       "estoqueId": 3
     }
-  ]
+  ],
+  "movimentacoes": []
 }

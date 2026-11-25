@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { provideRouter } from '@angular/router';
 import { Login } from './login';
 
 describe('Login', () => {
@@ -8,6 +10,8 @@ describe('Login', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [Login],
+      imports: [ReactiveFormsModule],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Login);

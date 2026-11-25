@@ -2,8 +2,11 @@ import { RenderMode, ServerRoute } from '@angular/ssr';
 
 export const serverRoutes: ServerRoute[] = [
   {
-    // Os cards criados pelo usuário existem só no navegador (mock em memória),
-    // então a página de detalhes é renderizada no cliente.
+    // Páginas que buscam dados na API (JSON-Server) são renderizadas no navegador.
+    path: 'inventory',
+    renderMode: RenderMode.Client,
+  },
+  {
     path: 'inventory/:id',
     renderMode: RenderMode.Client,
   },

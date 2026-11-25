@@ -203,6 +203,45 @@ td.alerta {
   accent-color: #000;
 }
 
+.motivo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #48505e;
+}
+
+.motivos {
+  display: flex;
+  gap: 8px;
+}
+
+.opcao-motivo {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 8px;
+  border: 1px solid #d0d5dd;
+  border-radius: 6px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.opcao-motivo:has(input:checked) {
+  border-color: #000;
+  color: #000;
+  font-weight: 500;
+}
+
+.opcao-motivo input {
+  margin: 0;
+  accent-color: #000;
+}
+
 .campo {
   display: flex;
   flex-direction: column;
