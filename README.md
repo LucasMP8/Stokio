@@ -85,9 +85,6 @@ npm start
 ```
 Quando aparecer `Local: http://localhost:4200/`, abra esse endereço no navegador.
 
-### Passo 6 — Entrar no sistema
-Use o usuário de teste: **jasond@gmail.com** / senha **vicecity**, ou crie uma conta na tela de cadastro.
-
 ### Problemas comuns
 - **"npm não é reconhecido":** feche e abra o terminal depois de instalar o Node.js.
 - **Aviso "Não foi possível carregar...":** a API não está rodando — faça o Passo 4.
