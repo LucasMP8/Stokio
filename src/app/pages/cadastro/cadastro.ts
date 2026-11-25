@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { UsuarioService } from '../../services/usuario';
-import { Usuario } from '../../models/usuario';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Usuario } from '../../models/usuario';
+import { UsuarioService } from '../../services/usuario';
 
 @Component({
   selector: 'app-cadastro',
@@ -10,56 +11,80 @@ import { Router } from '@angular/router';
   templateUrl: './cadastro.html',
 })
 export class Cadastro {
-  nome: string = '';
-  email: string = '';
-  senha: string = '';
-
   msgErro: string = '';
+  todosVaziosErro: boolean = false;
+
+  formularioCadastro = new FormGroup({
+    nome: new FormControl('', [Validators.required, Validators.pattern(/^[^0-9]+$/)]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    senha: new FormControl('', [Validators.required, Validators.minLength(6)]),
+  });
 
   constructor(
     private usuarioService: UsuarioService,
     private router: Router,
   ) {}
 
+  campoVazio(campo: string): boolean {
+    if (this.todosVaziosErro) {
+      return false;
+    }
+    const controle = this.formularioCadastro.get(campo);
+    return Boolean(controle && controle.hasError('required') && (controle.touched || controle.dirty));
+  }
+
+  emailFormatoInvalido(): boolean {
+    const email = this.formularioCadastro.get('email');
+    return Boolean(email && email.hasError('email') && (email.touched || email.dirty));
+  }
+
+  senhaCurta(): boolean {
+    const senha = this.formularioCadastro.get('senha');
+    return Boolean(senha && senha.hasError('minlength') && (senha.touched || senha.dirty));
+  }
+
+  limparErroGeral(): void {
+    this.msgErro = '';
+    this.todosVaziosErro = false;
+  }
+
   validarNome(event: Event): void {
+    this.limparErroGeral();
     const input = event.target as HTMLInputElement;
     const valorSemNumeros = input.value.replace(/\d/g, '');
     input.value = valorSemNumeros;
-    this.nome = valorSemNumeros;
+    this.formularioCadastro.get('nome')?.setValue(valorSemNumeros, { emitEvent: false });
   }
 
   cadastrar(): void {
     this.msgErro = '';
+    this.todosVaziosErro = false;
 
-    const nomeLimpo = this.nome.trim();
-    const emailLimpo = this.email.trim();
+    const nome = (this.formularioCadastro.value.nome ?? '').trim();
+    const email = (this.formularioCadastro.value.email ?? '').trim();
+    const senha = this.formularioCadastro.value.senha ?? '';
 
-    if (!nomeLimpo || !emailLimpo || !this.senha.trim()) {
-      this.msgErro = 'Preencha todos os campos obrigatórios';
+    if (!nome && !email && !senha.trim()) {
+      this.todosVaziosErro = true;
+      this.msgErro = 'Preencha todos os campos obrigatórios.';
       return;
     }
 
-    if (/\d/.test(nomeLimpo)) {
-      this.msgErro = 'O nome não pode conter números';
+    if (this.formularioCadastro.invalid) {
+      this.formularioCadastro.markAllAsTouched();
       return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(emailLimpo)) {
-      this.msgErro = 'Insira um email válido';
-      return;
-    }
-
-    if (this.senha.length < 6) {
-      this.msgErro = 'Insira uma senha de pelo menos seis caracteres';
+    if (!nome || !email || !senha.trim()) {
+      this.msgErro = 'Preencha todos os campos obrigatórios.';
       return;
     }
 
     const novoUsuario: Usuario = {
       id: 0,
-      nome: nomeLimpo,
-      email: emailLimpo,
-      senha: this.senha,
+      nome,
+      email,
+      senha,
       perfil: 'user',
     };
 

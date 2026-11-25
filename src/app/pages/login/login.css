@@ -126,7 +126,17 @@ h1 {
   text-decoration: underline;
 }
 
-/* Ajuste para telas pequenas */
+.campo input.email-invalido {
+  border-color: #ff0000;
+}
+
+.erro-campo {
+  color: #000000;
+  font-size: 12px;
+  margin-top: 6px;
+  padding-left: 6px
+}
+
 @media (max-width: 768px) {
   .container {
     flex-direction: column;

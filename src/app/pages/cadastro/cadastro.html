@@ -1,36 +1,64 @@
 <div class="container">
   <div class="card">
     <h1>Criar Conta</h1>
+
     <p class="subtitulo">Preencha seus dados para começar</p>
 
-    <form (ngSubmit)="cadastrar()">
+    <form [formGroup]="formularioCadastro" (ngSubmit)="cadastrar()">
       <div class="cadastro">
         <label for="nome">Nome</label>
+
         <input
           id="nome"
-          name="nome"
           type="text"
-          [(ngModel)]="nome"
-          (input)="validarNome($event)"
+          formControlName="nome"
           placeholder="Nome Completo"
+          (input)="validarNome($event)"
         />
+
+        @if (campoVazio('nome')) {
+          <small class="erro-campo">O nome precisa ser preenchido</small>
+        }
       </div>
 
       <div class="cadastro">
         <label for="email">Email</label>
+
         <input
           id="email"
-          name="email"
           type="email"
-          [(ngModel)]="email"
+          formControlName="email"
           placeholder="Email"
+          (input)="limparErroGeral()"
+          [class.campo-invalido]="emailFormatoInvalido()"
         />
+
+        @if (campoVazio('email')) {
+          <small class="erro-campo">O email precisa ser preenchido</small>
+        } @else if (emailFormatoInvalido()) {
+          <small class="erro-campo">Formato de e-mail inválido</small>
+        }
       </div>
 
       <div class="cadastro">
         <label for="senha">Senha</label>
-        <input id="senha" name="senha" type="password" [(ngModel)]="senha" placeholder="Senha" />
-        <small class="dica">Deve ter no mínimo 6 caracteres</small>
+
+        <input
+          id="senha"
+          type="password"
+          formControlName="senha"
+          placeholder="Senha"
+          (input)="limparErroGeral()"
+          [class.campo-invalido]="senhaCurta()"
+        />
+
+        @if (campoVazio('senha')) {
+          <small class="erro-campo">A senha precisa ser preenchida</small>
+        } @else if (senhaCurta()) {
+          <small class="erro-campo">A senha deve ter no mínimo 6 caracteres</small>
+        } @else {
+          <small class="dica">Deve ter no mínimo 6 caracteres</small>
+        }
       </div>
 
       @if (msgErro) {
