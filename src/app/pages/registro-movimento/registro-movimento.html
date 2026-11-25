@@ -20,6 +20,10 @@
     </div>
   </section>
 
+  @if (erroCarregar()) {
+    <p class="aviso-api">{{ erroCarregar() }}</p>
+  }
+
   <section class="card">
     <h2>Produtos</h2>
 
@@ -49,7 +53,7 @@
             </tr>
           } @empty {
             <tr class="vazio">
-              <td colspan="4">Nenhum produto cadastrado.</td>
+              <td colspan="4">{{ carregando() ? 'Carregando produtos...' : 'Nenhum produto cadastrado.' }}</td>
             </tr>
           }
         </tbody>
@@ -84,6 +88,23 @@
           </label>
         </div>
 
+        @if (ehSaida()) {
+          <div class="motivo">
+            <span>Motivo da retirada</span>
+            <div class="motivos" role="radiogroup" aria-label="Motivo da retirada">
+              @for (m of motivos; track m.valor) {
+                <label class="opcao-motivo">
+                  <input type="radio" formControlName="motivo" [value]="m.valor" />
+                  {{ m.rotulo }}
+                </label>
+              }
+            </div>
+            @if (motivoInvalido()) {
+              <small class="erro">Selecione o motivo da retirada.</small>
+            }
+          </div>
+        }
+
         <label class="campo" for="qtd">
           <span>Quantidade</span>
           <input id="qtd" type="number" min="1" step="1" formControlName="quantidade" placeholder="Digite a quantidade" />
@@ -100,9 +121,15 @@
           </p>
         }
 
+        @if (erroSalvar()) {
+          <p class="aviso-api">{{ erroSalvar() }}</p>
+        }
+
         <footer class="modal-acoes">
           <button type="button" class="btn btn-outline" (click)="fechar()">Cancelar</button>
-          <button type="submit" class="btn btn-primary">Confirmar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="salvando()">
+            {{ salvando() ? 'Salvando...' : 'Confirmar' }}
+          </button>
         </footer>
       </form>
     </div>

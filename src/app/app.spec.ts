@@ -1,4 +1,6 @@
 import { TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
@@ -11,6 +13,7 @@ describe('App', () => {
     await TestBed.configureTestingModule({
       imports: [RouterModule.forRoot([]), FormsModule],
       declarations: [App, Sidebar, Topbar],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
   });
 
@@ -28,8 +31,8 @@ describe('App', () => {
     );
     expect(links).toEqual([
       '/dashboard',
-      '/produtos',
       '/inventory',
+      '/produtos',
       '/registro-movimento',
       '/settings',
     ]);

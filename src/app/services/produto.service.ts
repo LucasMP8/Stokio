@@ -1,7 +1,10 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, PLATFORM_ID, computed, inject, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Observable, tap, throwError } from 'rxjs';
 
+import { API_URL } from '../api';
 import { Produto } from '../models/produto';
-import { MOCK_PRODUTOS } from '../mocks/mock-produtos';
 
 export type Situacao = 'em-estoque' | 'estoque-baixo' | 'sem-estoque';
 
@@ -17,47 +20,90 @@ export type ProdutoInput = Pick<
   providedIn: 'root',
 })
 export class ProdutoService {
-  private readonly lista = signal<Produto[]>(MOCK_PRODUTOS.map((p) => ({ ...p })));
+  private readonly http = inject(HttpClient);
+  private readonly url = `${API_URL}/produtos`;
+
+  /** Cópia local dos produtos retornados pela API. */
+  private readonly lista = signal<Produto[]>([]);
 
   readonly produtos = this.lista.asReadonly();
+  readonly carregando = signal(false);
+  readonly erro = signal<string | null>(null);
 
+  /** Próximo id (o JSON-Server gera o maior id + 1). */
   readonly nextId = computed(() => Math.max(0, ...this.lista().map((p) => p.id)) + 1);
+
+  constructor() {
+    if (isPlatformBrowser(inject(PLATFORM_ID))) {
+      this.carregar();
+    }
+  }
+
+  carregar(): void {
+    this.carregando.set(true);
+    this.http.get<Produto[]>(this.url).subscribe({
+      next: (produtos) => {
+        this.lista.set(produtos);
+        this.erro.set(null);
+        this.carregando.set(false);
+      },
+      error: () => {
+        this.erro.set('Não foi possível carregar os produtos. Verifique se a API está rodando.');
+        this.carregando.set(false);
+      },
+    });
+  }
 
   getById(id: number): Produto | undefined {
     return this.lista().find((p) => p.id === id);
   }
 
-  add(data: ProdutoInput): Produto {
-    const id = this.nextId();
-    const produto: Produto = {
-      id,
-      codigo: `SKU-${String(id).padStart(3, '0')}`,
+  possuiProdutosNoEstoque(estoqueId: number): boolean {
+    return this.lista().some((p) => p.estoqueId === estoqueId);
+  }
+
+  add(data: ProdutoInput): Observable<Produto> {
+    const novo: Omit<Produto, 'id'> = {
+      codigo: `SKU-${String(this.nextId()).padStart(3, '0')}`,
       unidade: 'Unidade',
       ativo: true,
       ...this.clean(data),
     };
-    this.lista.update((list) => [...list, produto]);
-    return produto;
+    return this.http
+      .post<Produto>(this.url, novo)
+      .pipe(tap((produto) => this.lista.update((list) => [...list, produto])));
   }
 
-  update(id: number, data: ProdutoInput): Produto | undefined {
-    let updated: Produto | undefined;
-    this.lista.update((list) =>
-      list.map((p) => (p.id === id ? (updated = { ...p, ...this.clean(data) }) : p)),
-    );
-    return updated;
+  update(id: number, data: ProdutoInput): Observable<Produto> {
+    return this.http
+      .patch<Produto>(`${this.url}/${id}`, this.clean(data))
+      .pipe(tap((produto) => this.substituir(produto)));
   }
 
-  /** Adiciona (entrada) ou retira (saída) unidades de um produto. */
-  movimentar(id: number, tipo: TipoMovimento, quantidade: number): Produto | undefined {
-    let updated: Produto | undefined;
-    const delta = tipo === 'entrada' ? quantidade : -quantidade;
-    this.lista.update((list) =>
-      list.map((p) =>
-        p.id === id ? (updated = { ...p, quantidade: Math.max(0, p.quantidade + delta) }) : p,
-      ),
-    );
-    return updated;
+  remove(id: number): Observable<void> {
+    return this.http
+      .delete<void>(`${this.url}/${id}`)
+      .pipe(tap(() => this.lista.update((list) => list.filter((p) => p.id !== id))));
+  }
+
+  /** Adiciona (entrada) ou retira (saída) unidades, sem deixar o saldo negativo. */
+  movimentar(id: number, tipo: TipoMovimento, quantidade: number): Observable<Produto> {
+    const produto = this.getById(id);
+    if (!produto) {
+      return throwError(() => new Error('Produto não encontrado.'));
+    }
+    if (!Number.isInteger(quantidade) || quantidade <= 0) {
+      return throwError(() => new Error('A quantidade deve ser um número inteiro maior que zero.'));
+    }
+    if (tipo === 'saida' && quantidade > produto.quantidade) {
+      return throwError(() => new Error('Não é possível retirar mais do que o saldo disponível.'));
+    }
+
+    const novaQuantidade =
+      tipo === 'entrada' ? produto.quantidade + quantidade : produto.quantidade - quantidade;
+    return this.http
+      .patch<Produto>(`${this.url}/${id}`, { quantidade: novaQuantidade })
+      .pipe(tap((atualizado) => this.substituir(atualizado)));
   }
 
   situacao(produto: Produto): Situacao {
@@ -65,6 +111,10 @@ export class ProdutoService {
       return 'sem-estoque';
     }
     return produto.quantidade <= produto.estoqueMinimo ? 'estoque-baixo' : 'em-estoque';
+  }
+
+  private substituir(produto: Produto): void {
+    this.lista.update((list) => list.map((p) => (p.id === produto.id ? produto : p)));
   }
 
   private clean(data: ProdutoInput): ProdutoInput {

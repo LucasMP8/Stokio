@@ -84,6 +84,12 @@ export class Produtos {
 
   protected readonly modalAberto = signal(false);
   protected readonly editandoId = signal<number | null>(null);
+  protected readonly salvando = signal(false);
+  protected readonly erroSalvar = signal<string | null>(null);
+  protected readonly carregando = this.produtoService.carregando;
+  protected readonly erroCarregar = computed(
+    () => this.produtoService.erro() ?? this.estoqueService.erro(),
+  );
 
   private readonly inteiro = [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)];
 
@@ -144,12 +150,14 @@ export class Produtos {
   }
 
   abrirCadastro(): void {
+    this.erroSalvar.set(null);
     this.editandoId.set(null);
     this.form.reset();
     this.modalAberto.set(true);
   }
 
   abrirEdicao(produto: Produto): void {
+    this.erroSalvar.set(null);
     this.editandoId.set(produto.id);
     this.form.reset({
       nome: produto.nome,
@@ -185,12 +193,42 @@ export class Produtos {
       estoqueMinimo: Number(v.estoqueMinimo),
     };
     const id = this.editandoId();
-    if (id === null) {
-      this.produtoService.add(dados);
-    } else {
-      this.produtoService.update(id, dados);
+    const requisicao =
+      id === null ? this.produtoService.add(dados) : this.produtoService.update(id, dados);
+
+    this.salvando.set(true);
+    this.erroSalvar.set(null);
+    requisicao.subscribe({
+      next: () => {
+        this.salvando.set(false);
+        this.fecharModal();
+      },
+      error: () => {
+        this.salvando.set(false);
+        this.erroSalvar.set('Não foi possível salvar. Verifique se a API está rodando.');
+      },
+    });
+  }
+
+  excluir(): void {
+    const id = this.editandoId();
+    const produto = id === null ? undefined : this.produtoService.getById(id);
+    if (!produto || !confirm(`Excluir o produto "${produto.nome}"?`)) {
+      return;
     }
-    this.fecharModal();
+    this.salvando.set(true);
+    this.erroSalvar.set(null);
+    this.produtoService.remove(produto.id).subscribe({
+      next: () => {
+        this.salvando.set(false);
+        this.fecharModal();
+        this.pagina.update((p) => Math.min(p, this.totalPaginas()));
+      },
+      error: () => {
+        this.salvando.set(false);
+        this.erroSalvar.set('Não foi possível excluir. Verifique se a API está rodando.');
+      },
+    });
   }
 
   invalido(campo: CampoProduto): boolean {

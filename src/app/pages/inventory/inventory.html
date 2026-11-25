@@ -10,7 +10,13 @@
     </p>
   }
 
-  @if (estoques().length > 0) {
+  @if (erroCarregar()) {
+    <p class="aviso-api">{{ erroCarregar() }}</p>
+  }
+
+  @if (carregando()) {
+    <p class="carregando">Carregando estoques...</p>
+  } @else if (estoques().length > 0) {
     <ul class="card-list">
       @for (estoque of estoques(); track estoque.id) {
         <li class="card" tabindex="0" (click)="viewDetails(estoque)" (keydown.enter)="viewDetails(estoque)">
@@ -64,20 +70,16 @@
         <span class="modal-id">ID #{{ editingId() ?? nextId() }}</span>
       </header>
 
-      <form #estoqueForm="ngForm" (ngSubmit)="save(estoqueForm)" novalidate>
+      <form [formGroup]="form" (ngSubmit)="save()" novalidate>
         <label class="field">
           <span>Nome</span>
           <input
-            name="nome"
+            formControlName="nome"
             type="text"
             placeholder="Ex.: Bond"
-            required
-            maxlength="40"
-            [(ngModel)]="form.nome"
-            #nome="ngModel"
             autofocus
           />
-          @if (nome.invalid && nome.touched) {
+          @if (invalido('nome')) {
             <small class="error">Informe o nome.</small>
           }
         </label>
@@ -85,15 +87,11 @@
         <label class="field">
           <span>Endereço</span>
           <input
-            name="endereco"
+            formControlName="endereco"
             type="text"
             placeholder="Ex.: Rua dos almirantes, 1002"
-            required
-            maxlength="100"
-            [(ngModel)]="form.endereco"
-            #endereco="ngModel"
           />
-          @if (endereco.invalid && endereco.touched) {
+          @if (invalido('endereco')) {
             <small class="error">Informe o endereço.</small>
           }
         </label>
@@ -102,15 +100,11 @@
           <label class="field">
             <span>Cidade</span>
             <input
-              name="cidade"
+              formControlName="cidade"
               type="text"
               placeholder="Ex.: BH"
-              required
-              maxlength="40"
-              [(ngModel)]="form.cidade"
-              #cidade="ngModel"
             />
-            @if (cidade.invalid && cidade.touched) {
+            @if (invalido('cidade')) {
               <small class="error">Informe a cidade.</small>
             }
           </label>
@@ -118,24 +112,27 @@
           <label class="field">
             <span>Telefone</span>
             <input
-              name="telefone"
+              formControlName="telefone"
               type="tel"
               placeholder="Ex.: 000000007"
-              required
-              maxlength="20"
-              [(ngModel)]="form.telefone"
-              #telefone="ngModel"
             />
-            @if (telefone.invalid && telefone.touched) {
-              <small class="error">Informe o telefone.</small>
+            @if (invalido('telefone')) {
+              <small class="error">Informe um telefone válido (8 a 20 dígitos).</small>
             }
           </label>
         </div>
 
+        @if (erroSalvar()) {
+          <p class="aviso-api">{{ erroSalvar() }}</p>
+        }
+
         <footer class="modal-footer">
+          @if (editingId() !== null) {
+            <button type="button" class="btn btn-excluir" [disabled]="salvando()" (click)="excluir()">Excluir</button>
+          }
           <button type="button" class="btn btn-outline" (click)="closeForm()">Cancelar</button>
-          <button type="submit" class="btn btn-primary">
-            {{ editingId() === null ? 'Criar estoque' : 'Salvar alterações' }}
+          <button type="submit" class="btn btn-primary" [disabled]="salvando()">
+            {{ salvando() ? 'Salvando...' : editingId() === null ? 'Criar estoque' : 'Salvar alterações' }}
           </button>
         </footer>
       </form>
