@@ -251,6 +251,9 @@
         }
 
         <footer class="modal-acoes">
+          @if (editandoId() !== null) {
+            <button type="button" class="btn btn-excluir" [disabled]="salvando()" (click)="excluir()">Excluir</button>
+          }
           <button type="button" class="btn btn-outline" (click)="fecharModal()">Descartar</button>
           <button type="submit" class="btn btn-primary" [disabled]="salvando()">
             {{ salvando() ? 'Salvando...' : editandoId() === null ? 'Adicionar produto' : 'Salvar alterações' }}

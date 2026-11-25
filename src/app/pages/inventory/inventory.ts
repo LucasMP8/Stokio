@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { Estoque } from '../../models/estoque';
 import { EstoqueInput, EstoqueService } from '../../services/estoque.service';
+import { ProdutoService } from '../../services/produto.service';
 
 @Component({
   selector: 'app-inventory',
@@ -13,6 +14,7 @@ import { EstoqueInput, EstoqueService } from '../../services/estoque.service';
 })
 export class Inventory {
   private readonly estoqueService = inject(EstoqueService);
+  private readonly produtoService = inject(ProdutoService);
   private readonly router = inject(Router);
 
   protected readonly estoques = this.estoqueService.filteredEstoques;
@@ -69,6 +71,33 @@ export class Inventory {
       error: () => {
         this.salvando.set(false);
         this.erroSalvar.set('Não foi possível salvar. Verifique se a API está rodando.');
+      },
+    });
+  }
+
+  excluir(): void {
+    const id = this.editingId();
+    const estoque = id === null ? undefined : this.estoqueService.getById(id);
+    if (!estoque) {
+      return;
+    }
+    if (this.produtoService.possuiProdutosNoEstoque(estoque.id)) {
+      this.erroSalvar.set('Não é possível excluir um estoque que ainda possui produtos.');
+      return;
+    }
+    if (!confirm(`Excluir o estoque "${estoque.nome}"?`)) {
+      return;
+    }
+    this.salvando.set(true);
+    this.erroSalvar.set(null);
+    this.estoqueService.remove(estoque.id).subscribe({
+      next: () => {
+        this.salvando.set(false);
+        this.closeForm();
+      },
+      error: () => {
+        this.salvando.set(false);
+        this.erroSalvar.set('Não foi possível excluir. Verifique se a API está rodando.');
       },
     });
   }

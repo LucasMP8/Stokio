@@ -75,6 +75,22 @@ textarea {
   background: #fafafa;
 }
 
+.btn-excluir {
+  margin-right: auto;
+  background: #fff;
+  color: #d14343;
+  border: 1px solid #f1c4c4;
+}
+
+.btn-excluir:hover {
+  background: #fdf2f2;
+}
+
+.btn-excluir:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Páginas ainda não implementadas */
 .page-title {
   font-size: 18px;

@@ -58,6 +58,10 @@ export class ProdutoService {
     return this.lista().find((p) => p.id === id);
   }
 
+  possuiProdutosNoEstoque(estoqueId: number): boolean {
+    return this.lista().some((p) => p.estoqueId === estoqueId);
+  }
+
   add(data: ProdutoInput): Observable<Produto> {
     const novo: Omit<Produto, 'id'> = {
       codigo: `SKU-${String(this.nextId()).padStart(3, '0')}`,

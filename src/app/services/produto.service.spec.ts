@@ -51,6 +51,11 @@ describe('ProdutoService', () => {
     expect(service.produtos().map((p) => p.id)).toEqual([1, 2]);
   });
 
+  it('should tell whether a stock still has products', () => {
+    expect(service.possuiProdutosNoEstoque(1)).toBe(true);
+    expect(service.possuiProdutosNoEstoque(2)).toBe(false);
+  });
+
   it('should POST a new product with automatic code, unit and active flag', () => {
     service.add(novo).subscribe();
 

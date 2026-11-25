@@ -210,6 +210,27 @@ export class Produtos {
     });
   }
 
+  excluir(): void {
+    const id = this.editandoId();
+    const produto = id === null ? undefined : this.produtoService.getById(id);
+    if (!produto || !confirm(`Excluir o produto "${produto.nome}"?`)) {
+      return;
+    }
+    this.salvando.set(true);
+    this.erroSalvar.set(null);
+    this.produtoService.remove(produto.id).subscribe({
+      next: () => {
+        this.salvando.set(false);
+        this.fecharModal();
+        this.pagina.update((p) => Math.min(p, this.totalPaginas()));
+      },
+      error: () => {
+        this.salvando.set(false);
+        this.erroSalvar.set('Não foi possível excluir. Verifique se a API está rodando.');
+      },
+    });
+  }
+
   invalido(campo: CampoProduto): boolean {
     const controle = this.form.controls[campo];
     return controle.invalid && controle.touched;
