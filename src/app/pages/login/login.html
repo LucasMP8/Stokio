@@ -10,27 +10,36 @@
         <p class="subtitulo">Faça login para acessar sua conta</p>
       </header>
 
-      <form (ngSubmit)="entrar()">
+      <form [formGroup]="formularioLogin" (ngSubmit)="entrar()">
         <div class="campo">
           <label for="email">Email</label>
           <input
             id="email"
-            name="email"
             type="email"
-            [(ngModel)]="email"
+            formControlName="email"
             placeholder="email"
+            (input)="limparErroGeral()"
+            [class.email-invalido]="emailFormatoInvalido()"
           />
+          @if (campoVazio('email')) {
+            <small class="erro-campo">O email precisa ser preenchido</small>
+          } @else if (emailFormatoInvalido()) {
+            <small class="erro-campo">Formato de e-mail inválido</small>
+          }
         </div>
 
         <div class="campo">
           <label for="senha">Senha</label>
           <input
             id="senha"
-            name="senha"
             type="password"
-            [(ngModel)]="senha"
+            formControlName="senha"
             placeholder="senha"
+            (input)="limparErroGeral()"
           />
+          @if (campoVazio('senha')) {
+            <small class="erro-campo">A senha precisa ser preenchida.</small>
+          }
         </div>
 
         @if (msgErro) {
