@@ -1,0 +1,130 @@
+{
+  "usuarios": [
+    {
+      "id": 1,
+      "nome": "Lucas Alves",
+      "email": "lucasalves@gmail.com",
+      "senha": "12345678",
+      "perfil": "admin"
+    },
+    {
+      "id": 2,
+      "nome": "lucas marques",
+      "email": "marqueslucas@gmail.com",
+      "senha": "987654321",
+      "perfil": "admin"
+    },
+    {
+      "id": 3,
+      "nome": "michaelagelo miranda",
+      "email": "mmiranda@gmail.com",
+      "senha": "00000000",
+      "perfil": "user"
+    },
+    {
+      "id": 4,
+      "nome": "trevor da silva",
+      "email": "tpindustria@gmail.com",
+      "senha": "00000001",
+      "perfil": "user"
+    },
+    {
+      "id": 5,
+      "nome": "james bond",
+      "email": "jamesbond@gmail.com",
+      "senha": "00000007",
+      "perfil": "user"
+    }
+  ],
+  "estoques": [
+    {
+      "id": 1,
+      "nome": "X",
+      "endereco": "Rua dos bobos, 1500",
+      "cidade": "BH",
+      "telefone": "999999999"
+    },
+    {
+      "id": 2,
+      "nome": "TP",
+      "endereco": "Rua das estrelas, 1200",
+      "cidade": "BH",
+      "telefone": "000000000"
+    },
+    {
+      "id": 3,
+      "nome": "Bond",
+      "endereco": "Rua dos almirantes, 1002",
+      "cidade": "BH",
+      "telefone": "000000007"
+    }
+  ],
+  "produtos": [
+    {
+      "id": 1,
+      "codigo": "SKU-001",
+      "nome": "Café Torrado 500g",
+      "categoria": "Alimentos",
+      "precoCusto": 12.50,
+      "precoVenda": 19.90,
+      "quantidade": 35,
+      "estoqueMinimo": 10,
+      "unidade": "Pacote",
+      "ativo": true,
+      "estoqueId": 1
+    },
+    {
+      "id": 2,
+      "codigo": "SKU-002",
+      "nome": "Refrigerante Cola 2L",
+      "categoria": "Bebidas",
+      "precoCusto": 5.20,
+      "precoVenda": 9.50,
+      "quantidade": 8,
+      "estoqueMinimo": 10,
+      "unidade": "Unidade",
+      "ativo": true,
+      "estoqueId": 1
+    },
+    {
+      "id": 3,
+      "codigo": "SKU-003",
+      "nome": "Detergente Neutro",
+      "categoria": "Limpeza",
+      "precoCusto": 1.80,
+      "precoVenda": 3.50,
+      "quantidade": 50,
+      "estoqueMinimo": 15,
+      "unidade": "Unidade",
+      "ativo": true,
+      "estoqueId": 2
+    },
+    {
+      "id": 4,
+      "codigo": "SKU-004",
+      "nome": "Sabão em Pó 1kg",
+      "categoria": "Limpeza",
+      "precoCusto": 9.00,
+      "precoVenda": 15.90,
+      "quantidade": 4,
+      "estoqueMinimo": 8,
+      "unidade": "Caixa",
+      "ativo": true,
+      "estoqueId": 2
+    },
+    {
+      "id": 5,
+      "codigo": "SKU-005",
+      "nome": "Biscoito Recheado",
+      "categoria": "Alimentos",
+      "precoCusto": 2.10,
+      "precoVenda": 4.20,
+      "quantidade": 0,
+      "estoqueMinimo": 12,
+      "unidade": "Pacote",
+      "ativo": false,
+      "estoqueId": 3
+    }
+  ],
+  "movimentacoes": []
+}

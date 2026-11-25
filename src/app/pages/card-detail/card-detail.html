@@ -1,0 +1,37 @@
+<section class="detail">
+  <button type="button" class="back" (click)="goBack()">&larr; Voltar para Gerenciar inventário</button>
+
+  @if (estoque(); as estoque) {
+    <article class="detail-card">
+      <div class="detail-side">{{ estoque.nome }}</div>
+
+      <dl class="detail-body">
+        <div>
+          <dt>ID</dt>
+          <dd>#{{ estoque.id }}</dd>
+        </div>
+        <div>
+          <dt>Nome</dt>
+          <dd>{{ estoque.nome }}</dd>
+        </div>
+        <div>
+          <dt>Endereço</dt>
+          <dd>{{ estoque.endereco }}</dd>
+        </div>
+        <div>
+          <dt>Cidade</dt>
+          <dd>{{ estoque.cidade }}</dd>
+        </div>
+        <div>
+          <dt>Telefone</dt>
+          <dd>{{ estoque.telefone }}</dd>
+        </div>
+      </dl>
+    </article>
+  } @else {
+    <div class="placeholder-box">
+      <p>Estoque não encontrado.</p>
+      <button type="button" class="btn btn-primary" (click)="goBack()">Ver todos os estoques</button>
+    </div>
+  }
+</section>

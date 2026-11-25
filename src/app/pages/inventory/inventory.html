@@ -1,0 +1,141 @@
+<section class="inventory">
+  <div class="inventory-header">
+    <h1>Gerenciar inventário</h1>
+    <button type="button" class="btn btn-primary" (click)="openCreate()">Add Estoque</button>
+  </div>
+
+  @if (searchTerm()) {
+    <p class="search-info">
+      {{ estoques().length }} resultado(s) para "<strong>{{ searchTerm() }}</strong>"
+    </p>
+  }
+
+  @if (erroCarregar()) {
+    <p class="aviso-api">{{ erroCarregar() }}</p>
+  }
+
+  @if (carregando()) {
+    <p class="carregando">Carregando estoques...</p>
+  } @else if (estoques().length > 0) {
+    <ul class="card-list">
+      @for (estoque of estoques(); track estoque.id) {
+        <li class="card" tabindex="0" (click)="viewDetails(estoque)" (keydown.enter)="viewDetails(estoque)">
+          <a
+            class="card-side"
+            routerLink="/produtos"
+            [queryParams]="{ estoque: estoque.id }"
+            title="Ver produtos deste estoque"
+            (click)="$event.stopPropagation()"
+            (keydown.enter)="$event.stopPropagation()"
+          >
+            <span>{{ estoque.nome }}</span>
+          </a>
+
+          <div class="card-body">
+            <div class="card-info">
+              <h2 class="card-name">{{ estoque.nome }}</h2>
+              <p class="card-description">
+                <span>{{ estoque.endereco }}</span>
+                <span>{{ estoque.cidade }}</span>
+                <span>{{ estoque.telefone }}</span>
+              </p>
+            </div>
+
+            <div class="card-actions">
+              <button type="button" class="btn btn-outline" (click)="openEdit(estoque, $event)">Edit</button>
+              <span class="card-id">ID #{{ estoque.id }}</span>
+            </div>
+          </div>
+        </li>
+      }
+    </ul>
+  } @else {
+    <div class="empty">
+      @if (searchTerm()) {
+        <p>Nenhum estoque encontrado para "{{ searchTerm() }}".</p>
+      } @else {
+        <p>Nenhum estoque cadastrado ainda.</p>
+        <button type="button" class="btn btn-primary" (click)="openCreate()">Add Estoque</button>
+      }
+    </div>
+  }
+</section>
+
+<!-- Modal de criação / edição -->
+@if (isFormOpen()) {
+  <div class="modal-backdrop" (click)="closeForm()">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" (click)="$event.stopPropagation()">
+      <header class="modal-header">
+        <h2 id="modal-title">{{ editingId() === null ? 'Novo estoque' : 'Editar estoque' }}</h2>
+        <span class="modal-id">ID #{{ editingId() ?? nextId() }}</span>
+      </header>
+
+      <form [formGroup]="form" (ngSubmit)="save()" novalidate>
+        <label class="field">
+          <span>Nome</span>
+          <input
+            formControlName="nome"
+            type="text"
+            placeholder="Ex.: Bond"
+            autofocus
+          />
+          @if (invalido('nome')) {
+            <small class="error">Informe o nome.</small>
+          }
+        </label>
+
+        <label class="field">
+          <span>Endereço</span>
+          <input
+            formControlName="endereco"
+            type="text"
+            placeholder="Ex.: Rua dos almirantes, 1002"
+          />
+          @if (invalido('endereco')) {
+            <small class="error">Informe o endereço.</small>
+          }
+        </label>
+
+        <div class="field-row">
+          <label class="field">
+            <span>Cidade</span>
+            <input
+              formControlName="cidade"
+              type="text"
+              placeholder="Ex.: BH"
+            />
+            @if (invalido('cidade')) {
+              <small class="error">Informe a cidade.</small>
+            }
+          </label>
+
+          <label class="field">
+            <span>Telefone</span>
+            <input
+              formControlName="telefone"
+              type="tel"
+              placeholder="Ex.: 000000007"
+            />
+            @if (invalido('telefone')) {
+              <small class="error">Informe um telefone válido (8 a 20 dígitos).</small>
+            }
+          </label>
+        </div>
+
+        @if (erroSalvar()) {
+          <p class="aviso-api">{{ erroSalvar() }}</p>
+        }
+
+        <footer class="modal-footer">
+          @if (editingId() !== null) {
+            <button type="button" class="btn btn-excluir" [disabled]="salvando()" (click)="excluir()">Excluir</button>
+          }
+          <button type="button" class="btn btn-outline" (click)="closeForm()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="salvando()">
+            {{ salvando() ? 'Salvando...' : editingId() === null ? 'Criar estoque' : 'Salvar alterações' }}
+          </button>
+        </footer>
+      </form>
+    </div>
+  </div>
+}

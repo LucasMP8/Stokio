@@ -1,0 +1,167 @@
+<div class="dashboard-page">
+  <header class="page-header">
+    <h1>Dashboard</h1>
+    <button type="button" class="btn-dark" (click)="goToInventory()">Gerenciar estoques</button>
+  </header>
+
+  <div class="dashboard-grid">
+    <section class="card">
+      <h2>Resumo Financeiro</h2>
+      <div class="metrics-grid cols-4">
+        <div class="metric-item">
+          <span class="metric-value">{{ formatarMoeda(custoEmEstoque) }}</span>
+          <span class="metric-label">Custo em Estoque</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-value">{{ formatarMoeda(potencialDeVenda) }}</span>
+          <span class="metric-label">Potencial de Venda</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-value destaque-positivo">{{ formatarMoeda(lucroEstimado) }}</span>
+          <span class="metric-label">Lucro Estimado</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-value">{{ formatarPercentual(margemMedia) }}</span>
+          <span class="metric-label">Margem Média</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Resumo de Produtos</h2>
+      <div class="metrics-grid cols-2">
+        <div class="metric-item">
+          <span class="metric-value">{{ totalEmEstoque }}</span>
+          <span class="metric-label">Total em Estoque</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-value">{{ produtosAtivos.length }}</span>
+          <span class="metric-label">Produtos Ativos</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Movimentações Recentes</h2>
+      <div class="metrics-grid cols-4">
+        <div class="metric-item">
+          <span class="metric-value">{{ totalEntradas }}</span>
+          <span class="metric-label">Entradas</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-value">{{ totalSaidas }}</span>
+          <span class="metric-label">Saídas</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-value">{{ totalDevolucoes }}</span>
+          <span class="metric-label">Devoluções</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-value">{{ totalPerdas }}</span>
+          <span class="metric-label">Perdas / Uso Interno</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Situação dos Produtos</h2>
+      <div class="metrics-grid cols-2">
+        <div class="metric-item">
+          <span class="metric-value">{{ produtosEmAlerta.length }}</span>
+          <span class="metric-label">Em Alerta</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-value">{{ produtosInativos.length }}</span>
+          <span class="metric-label">Inativos</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-header">
+        <h2>Entradas x Saídas</h2>
+        <span class="badge-period">Últimos 6 meses</span>
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-main">
+          <div class="y-axis">
+            @for (valor of linhasEscala; track $index) {
+              <span>{{ valor }}</span>
+            }
+          </div>
+
+          <div class="chart-area">
+            <div class="grid-lines">
+              @for (valor of linhasEscala; track $index) {
+                <div class="grid-line"></div>
+              }
+            </div>
+
+            <div class="bars-container">
+              @for (item of dadosGrafico; track item.mes) {
+                <div class="bar-group">
+                  <div class="bars-pair">
+                    <div
+                      class="bar bar-entrada"
+                      [style.height.%]="calcularAltura(item.entradas)"
+                      [title]="'Entradas em ' + item.mes + ': ' + item.entradas"
+                    ></div>
+                    <div
+                      class="bar bar-saida"
+                      [style.height.%]="calcularAltura(item.saidas)"
+                      [title]="'Saídas em ' + item.mes + ': ' + item.saidas"
+                    ></div>
+                  </div>
+                  <span class="bar-label">{{ item.mes }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-legend">
+          <div class="legend-item">
+            <span class="legend-dot dot-entrada"></span>
+            <span>Entradas</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot dot-saida"></span>
+            <span>Saídas</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-header">
+        <h2>Alerta de Reposição</h2>
+        <a class="link-action" (click)="goToInventory()">Ver estoques</a>
+      </div>
+
+      <div class="stock-list">
+        @for (produto of produtosEmAlerta; track produto.id) {
+          <div class="stock-item">
+            <div class="stock-info">
+              <strong>{{ produto.nome }}</strong>
+              <span>
+                Restam: {{ produto.quantidade }}
+                {{ formatarUnidade(produto.quantidade, produto.unidade) }} • Mínimo:
+                {{ produto.estoqueMinimo }}
+                {{ formatarUnidade(produto.estoqueMinimo, produto.unidade) }}
+              </span>
+            </div>
+
+            @if (isCritico(produto)) {
+              <span class="badge-critico">Crítico</span>
+            } @else {
+              <span class="badge-low">Baixo</span>
+            }
+          </div>
+        } @empty {
+          <p class="empty-msg">Nenhum produto com estoque baixo.</p>
+        }
+      </div>
+    </section>
+  </div>
+</div>
